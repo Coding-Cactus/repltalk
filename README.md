@@ -10,7 +10,7 @@ gem "repltalk"
 ### Getting Started
 
 ```ruby
-require "repltak"
+require "repltalk"
 
 client = Client.new
 ```
@@ -19,6 +19,7 @@ Once you have your client initialized, you can start getting users, posts, comme
 
 ### Client
 + `#get_user username` Get a user from their username. Returns `User`
++ `#get_user_by_id id` Get a user from their id. Returns `User`
 
 
 ### User

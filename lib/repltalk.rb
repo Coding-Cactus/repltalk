@@ -68,6 +68,15 @@ class Client
 		User.new(u["user"])
 	end
 
+	def get_user_by_id(id)
+		u = graphql(
+			"user",
+			Queries.get_user_by_id,
+			user_id: id
+		)
+		User.new(u["user"])
+	end
+
 
 	private
 
