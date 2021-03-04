@@ -16,6 +16,8 @@ class Role
 	end
 end
 
+
+
 class Organization
 	attr_reader :id, :name
 
@@ -28,6 +30,8 @@ class Organization
 		@name
 	end
 end
+
+
 
 class Language
 	attr_reader :id, :key, :name, :tagline, :icon
@@ -44,6 +48,8 @@ class Language
 		@id
 	end
 end
+
+
 
 class Repl
 	attr_reader :id, :url, :title, :description, :language, :is_private, :is_always_on
@@ -64,6 +70,8 @@ class Repl
 	end
 end
 
+
+
 class Board
 	attr_reader :id, :name, :color
 
@@ -77,6 +85,8 @@ class Board
 		@name
 	end
 end
+
+
 
 class Comment
 	attr_reader :id, :url, :author, :content, :vote_count, :can_vote, :has_voted
@@ -99,8 +109,10 @@ class Comment
 	end
 end
 
+
+
 class Post
-	attr_reader :id, :url, :repl, :board, :title, :author, :content, :preview, :timestamp, :vote_count, :comment_count, :can_vote, :has_voted, :is_anwered, :is_answerable, :is_hidden, :is_pinned, :is_locked, :is_announcement
+	attr_reader :id, :url, :repl, :board, :title, :author, :content, :preview, :timestamp, :vote_count, :comment_count, :can_vote, :has_voted, :is_answered, :is_answerable, :is_hidden, :is_pinned, :is_locked, :is_announcement
 
 	def initialize(client, post)
 		@client = client
@@ -135,6 +147,8 @@ class Post
 		@title
 	end
 end
+
+
 
 class User
 	attr_reader :id, :username, :name, :pfp, :bio, :cycles, :is_hacker, :roles, :organization, :languages
@@ -187,6 +201,8 @@ class User
 	end
 end
 
+
+
 class Client
 	attr_writer :sid
 
@@ -236,6 +252,15 @@ class Client
 			Queries.get_user_by_id,
 			user_id: id
 		)
-		User.new(u["user"])
+		User.new(self, u["user"])
+	end
+
+	def get_post(id)
+		p = graphql(
+			"post",
+			Queries.get_post,
+			id: id
+		)
+		Post.new(self, p["post"])
 	end
 end

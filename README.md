@@ -23,6 +23,7 @@ Once you have your client initialized, you can start getting users, posts, comme
 ### Client
 + `#get_user username` Get a user from their username. Returns `User`
 + `#get_user_by_id id` Get a user from their id. Returns `User`
++ `#get_post id` Get a post from it's id. Returns `Post`
 
 
 ### User
