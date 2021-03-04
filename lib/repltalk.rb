@@ -16,6 +16,19 @@ class Role
 	end
 end
 
+class Organization
+	attr_reader :id, :name
+
+	def initialize(organization)
+		@id = organization["id"]
+		@name = organization["name"]
+	end
+
+	def to_s
+		@name
+	end
+end
+
 class Language
 	attr_reader :id, :key, :name, :tagline, :icon
 
@@ -32,10 +45,82 @@ class Language
 	end
 end
 
-class User
-	attr_reader :id, :username, :name, :pfp, :bio, :cycles, :is_hacker, :roles, :languages
+class Repl
+	attr_reader :id, :url, :title, :description, :language, :is_private, :is_always_on
 
-	def initialize(user)
+	def initialize(repl)
+		@id = repl["id"]
+		@url = repl["url"]
+		@title = repl["title"]
+		@description = repl["description"]
+		@language = Language.new(repl["lang"])
+
+		@is_private = repl["isPrivate"]
+		@is_always_on = repl["isAlwaysOn"]
+	end
+
+	def to_s
+		@title
+	end
+end
+
+class Board
+	attr_reader :id, :name, :color
+
+	def initialize(board)
+		@id = board["id"]
+		@name = board["name"]
+		@color = board["color"]
+	end
+
+	def to_s
+		@name
+	end
+end
+
+class Post
+	attr_reader :id, :url, :repl, :board, :title, :author, :content, :preview, :timestamp, :vote_count, :comment_count, :can_vote, :has_voted, :is_anwered, :is_answerable, :is_hidden, :is_pinned, :is_locked, :is_announcement
+
+	def initialize(client, post)
+		@client = client
+		
+		@id = post["id"]
+		@url = post["url"]
+		@title = post["title"]
+		@content = post["body"]
+		@preview = post["preview"]
+		@timestamp = post["timeCreated"]
+
+		@board = Board.new(post["board"])
+		@author = User.new(@client, post["user"])
+		@repl = post["repl"] == nil ? nil : Repl.new(post["repl"])
+
+		@vote_count = post["voteCount"]
+		@comment_count = post["commentCount"]
+
+		@can_vote = post["canVote"]
+		@has_voted = post["hasVoted"]
+
+		@is_answered = post["isAnswered"]
+		@is_answerable = post["isAnswerable"]
+
+		@is_hidden = post["isHidden"]
+		@is_pinned = post["isPinned"]
+		@is_locked = post["isLocked"]
+		@is_announcement = post["isAnnouncement"]
+	end
+
+	def to_s
+		@title
+	end
+end
+
+class User
+	attr_reader :id, :username, :name, :pfp, :bio, :cycles, :is_hacker, :roles, :organization, :languages
+
+	def initialize(client, user)
+		@client = client
+
 		@id = user["id"]
 		@username = user["username"]
 		@name = user["fullName"]
@@ -44,7 +129,24 @@ class User
 		@cycles = user["karma"]
 		@is_hacker = user["isHacker"]
 		@roles = user["roles"].map { |role| Role.new(role) }
+		@organization = user["organization"] == nil ? nil : Organization.new(user["organization"])
 		@languages = user["languages"].map { |lang| Language.new(lang) }
+	end
+
+	def get_posts(order="top", count=nil, after=nil)
+		p = @client.graphql(
+			"ProfilePosts",
+			Queries.get_user_posts,
+			username: @username,
+			order: order,
+			count: count,
+			after: after
+		)
+		posts = Array.new
+		p["user"]["posts"]["items"].each do |post|
+			posts << Post.new(@client, post)
+		end
+		posts
 	end
 
 	def to_s
@@ -58,27 +160,6 @@ class Client
 	def initialize(sid=nil)
 		@sid = sid
 	end
-
-	def get_user(name)
-		u = graphql(
-			"userByUsername",
-			Queries.get_user,
-			username: name
-		)
-		User.new(u["user"])
-	end
-
-	def get_user_by_id(id)
-		u = graphql(
-			"user",
-			Queries.get_user_by_id,
-			user_id: id
-		)
-		User.new(u["user"])
-	end
-
-
-	private
 
 	def graphql(name, query, **variables)
 		payload = {
@@ -105,5 +186,23 @@ class Client
 		end
 		data = data["data"] if data.include?("data")
 		data
+	end
+
+	def get_user(name)
+		u = graphql(
+			"userByUsername",
+			Queries.get_user,
+			username: name
+		)
+		User.new(self, u["user"])
+	end
+
+	def get_user_by_id(id)
+		u = graphql(
+			"user",
+			Queries.get_user_by_id,
+			user_id: id
+		)
+		User.new(u["user"])
 	end
 end

@@ -17,6 +17,8 @@ client = Client.new
 
 Once you have your client initialized, you can start getting users, posts, comments etc.
 
+***
+
 ### Client
 + `#get_user username` Get a user from their username. Returns `User`
 + `#get_user_by_id id` Get a user from their id. Returns `User`
@@ -32,11 +34,36 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#is_hacker` Whether the user has the hacker plan
 + `#roles` User's roles. Returns an array of `Role`s
 + `#languages` Languages that the user has used. Returns array of `Language`s
++ `#get_posts order, count, after` Get the user's posts. All arguments are optional. Order defaults to 'top'. Count defaults to 30. After defaults to 0. Returns array of `Post`s
+
+### Post
++ `#id` Post's id
++ `#url` Post's url
++ `#repl` Repl attatched to the post. Returns nil if there is none. Else returns `Repl`
++ `#board` Board that the post is from. Returns `Board`
++ `#title` Post's title
++ `#author` Post's author. Returns `User`
++ `#content` Post's content
++ `#preview` Preview of the post's content.
++ `#timestamp` When the post was posted
++ `#vote_count` How many votes there post has
++ `#comment_count` How many comments the post has
++ `#is_answered` Whether an answer has been selected
++ `#is_answerable` Whether you are able to answer the post
++ `#is_announcement` Whether the post in marked as an announcement
++ `#is_pinned` Whether the post is pinned
++ `#is_locked` Whether the post is locked
++ `#is_hidden` Whether the post is hidden (unlisted)
+
 
 ### Role
 + `#name` Role's name
 + `#key` Role's key
 + `#tagline` Role's tagline
+
+### Organization
++ `#id` Organization's id
++ `#name` Organization's name
 
 ### Language
 + `#id` Language's id (like 'python3' or 'html')
@@ -44,3 +71,17 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#name` Language's name (like 'Python' or 'HTML, CSS, JS')
 + `#tagline` Language's tagline
 + `#icon` URL of the language's icon
+
+### Repl
++ `#id` Repl's id
++ `#url` Repl's URL
++ `#title` Repl's name
++ `#description` Repl's description
++ `#language` Repl's language. Returns `Language`
++ `#is_private` Whetehr the repl is private
++ `#is_always_on` Whether the repl is always on
+
+### Board
++ `#id` Board's id
++ `#name` Board's name
++ `#color` Board's color
