@@ -25,7 +25,7 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#get_user_by_id id` Get a user from their id. Returns `User`
 + `#get_post id` Get a post from it's id. Returns `Post`
 + `#get_comment id` Get a comment from it's id. Returns `Comment`
-+ `#get_posts :board, :order, :count, :after, :search, :languages` Get posts from repltalk. All arguments are optional. Board defaults to "all". Order defaults "new". Count defaults to 30. The rest default to nil. The languages argument should be a list of lamguage ids. Returns array of `Post`s
++ `#get_posts :board, :order, :count, :after, :search, :languages` Get posts from repltalk. All arguments are optional. Board defaults to "all". Order defaults "new". Count defaults to 30. The rest default to nil. The languages argument should be an array of lamguage ids. Returns array of `Post`s
 
 ### User
 + `#id` User's id
