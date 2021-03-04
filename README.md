@@ -1,4 +1,5 @@
-# repltalk
+<p align="center"><img alt="repltak" src="https://repltalk-logo.codingcactus.repl.co/logo.png" /></p>
+
 
 A ruby client for the [repl talk](https://repl.it/talk) gql api.
 
