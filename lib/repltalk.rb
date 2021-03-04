@@ -282,4 +282,18 @@ class Client
 		)
 		Comment.new(self, c["comment"])
 	end
+	
+	def get_posts(board: "all", order: "new", count: nil, after: nil, search: nil, languages: nil)
+		p = graphql(
+			"PostsFeed",
+			Queries.get_posts,
+			baordSlugs: [board],
+			order: order,
+			count: count,
+			after: after,
+			searchQuery: search,
+			languages: languages
+		)
+		p["posts"]["items"].map { |post| Post.new(self, post) }
+	end
 end
