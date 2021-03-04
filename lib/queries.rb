@@ -20,6 +20,7 @@ class Queries
 			bio
 			karma
 			isHacker
+			timeCreated
 			roles {
 				id
 				name
@@ -65,6 +66,7 @@ class Queries
 			bio
 			karma
 			isHacker
+			timeCreated
 			roles {
 				id
 				name
@@ -193,6 +195,7 @@ class Queries
 			id
 			url
 			username
+			timeCreated
 			roles {
 				id
 				name
@@ -243,6 +246,7 @@ class Queries
 			body
 			timeCreated
 			url
+			isAnswer
 			...CommentVoteControlComment
 			user {
 				id
@@ -252,6 +256,7 @@ class Queries
 				bio
 				karma
 				isHacker
+				timeCreated
 				roles {
 					id
 					name
@@ -353,7 +358,8 @@ class Queries
 			isAnswerable
 			...PostVoteControlPost
 			user {
-				id				
+				id
+				timeCreated		
 				roles {
 					id
 					name
@@ -448,6 +454,92 @@ class Queries
 		fragment PostAnsweredCardComment on Comment {
 			id
 			url
+			__typename
+		}"
+	end
+
+	def Queries.get_comment
+		"query comment ($id: Int!) {
+			comment(id: $id) {
+				id
+				url
+				isAnswer
+				...CommentDetailComment
+				comments {
+					id
+					url
+					isAnswer
+					...CommentDetailComment
+					__typename
+				}
+				__typename
+			}
+		}
+
+		fragment DepreciatedUserLabelUser on User {
+			id
+			fullName
+			username
+			image
+			bio
+			karma
+			isHacker
+			timeCreated
+			roles {
+				id
+				name
+				key
+				tagline
+				__typename
+			}
+			organization {
+				id
+				name
+				__typename
+			}
+			languages {
+				id
+				key
+				displayName
+				tagline
+				icon
+				__typename
+			}
+			__typename
+		}
+
+		fragment CommentDetailComment on Comment {
+			id
+			body
+			timeCreated
+			url
+			isAnswer
+			...CommentVoteControlComment
+			user {
+				id
+				username
+				...DepreciatedUserLabelWithImageUser
+				__typename
+			}
+			post {
+				id
+				__typename
+			}
+			__typename
+		}
+
+		fragment DepreciatedUserLabelWithImageUser on User {
+			id
+			image
+			...DepreciatedUserLabelUser
+			__typename
+		}
+
+		fragment CommentVoteControlComment on Comment {
+			id
+			voteCount
+			canVote
+			hasVoted
 			__typename
 		}"
 	end

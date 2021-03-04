@@ -89,19 +89,32 @@ end
 
 
 class Comment
-	attr_reader :id, :url, :author, :content, :vote_count, :can_vote, :has_voted
+	attr_reader :id, :url, :author, :content, :post_id, :is_answer, :vote_count, :timestamp, :comments, :can_vote, :has_voted
 
 	def initialize(client, comment)
 		@client = client
 
 		@id = comment["id"]
 		@url = comment["url"]
-		@author = User.new(@client, comment["user"])
+		@author = comment["user"] == nil ? "[deleted user]" : User.new(@client, comment["user"])
 		@content = comment["body"]
+		@post_id = comment["post"]["id"]
+		@is_answer = comment["isAnswer"]
 		@vote_count = comment["voteCount"]
+		@timestamp = comment["timeCreated"]
+		@comments = comment.include?("comments") ? comment["comments"].map { |c| Comment.new(@client, c)} : Array.new
 
 		@can_vote = comment["canVote"]
 		@has_voted = comment["hasVoted"]
+	end
+
+	def get_post
+		p = @client.graphql(
+			"post",
+			Queries.get_post,
+			id: @post_id
+		)
+		Post.new(self, p["post"])
 	end
 
 	def to_s
@@ -125,8 +138,8 @@ class Post
 		@timestamp = post["timeCreated"]
 
 		@board = Board.new(post["board"])
-		@author = User.new(@client, post["user"])
 		@repl = post["repl"] == nil ? nil : Repl.new(post["repl"])
+		@author = post["user"] == nil ? "[deleted user]" : User.new(@client, post["user"])
 
 		@vote_count = post["voteCount"]
 		@comment_count = post["commentCount"]
@@ -151,7 +164,7 @@ end
 
 
 class User
-	attr_reader :id, :username, :name, :pfp, :bio, :cycles, :is_hacker, :roles, :organization, :languages
+	attr_reader :id, :username, :name, :pfp, :bio, :cycles, :is_hacker, :timestamp, :roles, :organization, :languages
 
 	def initialize(client, user)
 		@client = client
@@ -163,6 +176,7 @@ class User
 		@bio = user["bio"]
 		@cycles = user["karma"]
 		@is_hacker = user["isHacker"]
+		@timestamp = user["timeCreated"]
 		@roles = user["roles"].map { |role| Role.new(role) }
 		@organization = user["organization"] == nil ? nil : Organization.new(user["organization"])
 		@languages = user["languages"].map { |lang| Language.new(lang) }
@@ -177,9 +191,7 @@ class User
 			count: count,
 			after: after
 		)
-		posts = Array.new
-		p["user"]["posts"]["items"].each { |post| posts << Post.new(@client, post) }
-		posts
+		p["user"]["posts"]["items"].map { |post| Post.new(@client, post) }
 	end
 
 	def get_comments(order: "new", count: nil, after: nil)
@@ -191,9 +203,7 @@ class User
 			count: count,
 			after: after
 		)
-		comments = Array.new
-		c["user"]["comments"]["items"].each { |comment| comments << Comment.new(@client, comment) }
-		comments
+		c["user"]["comments"]["items"].map { |comment| Comment.new(@client, comment) }
 	end
 
 	def to_s
@@ -262,5 +272,14 @@ class Client
 			id: id
 		)
 		Post.new(self, p["post"])
+	end
+
+	def get_comment(id)
+		c = graphql(
+			"comment",
+			Queries.get_comment,
+			id: id
+		)
+		Comment.new(self, c["comment"])
 	end
 end

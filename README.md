@@ -24,6 +24,7 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#get_user username` Get a user from their username. Returns `User`
 + `#get_user_by_id id` Get a user from their id. Returns `User`
 + `#get_post id` Get a post from it's id. Returns `Post`
++ `#get_comment id` Get a comment from it's id. Returns `Comment`
 
 
 ### User
@@ -33,6 +34,7 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#pfp` URL of the user's pfp
 + `#bio` User's bio
 + `#cycles` How many cycles the user has
++ `#timestamp` When the account was made
 + `#is_hacker` Whether the user has the hacker plan
 + `#roles` User's roles. Returns an array of `Role`s
 + `#languages` Languages that the user has used. Returns array of `Language`s
@@ -63,7 +65,12 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#url` Comment's url
 + `#author` Comment's author. Returns `User`
 + `#content` Comment's content
++ `#post_id` Id of the post that the comment is on
++ `#is_answer` Whether the comment has been selected as the answer to a post
 + `#vote_count` How many votes teh comment has
++ `#timestamp` When the comment was made
++ `#comments` Get the children comments of the comment. Returns array of `Comments`
++ `#get_post` Get the post that the comment was made on. Returns `Post`
 
 ### Role
 + `#name` Role's name
