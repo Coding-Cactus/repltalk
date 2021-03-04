@@ -78,6 +78,27 @@ class Board
 	end
 end
 
+class Comment
+	attr_reader :id, :url, :author, :content, :vote_count, :can_vote, :has_voted
+
+	def initialize(client, comment)
+		@client = client
+
+		@id = comment["id"]
+		@url = comment["url"]
+		@author = User.new(@client, comment["user"])
+		@content = comment["body"]
+		@vote_count = comment["voteCount"]
+
+		@can_vote = comment["canVote"]
+		@has_voted = comment["hasVoted"]
+	end
+
+	def to_s
+		@content
+	end
+end
+
 class Post
 	attr_reader :id, :url, :repl, :board, :title, :author, :content, :preview, :timestamp, :vote_count, :comment_count, :can_vote, :has_voted, :is_anwered, :is_answerable, :is_hidden, :is_pinned, :is_locked, :is_announcement
 
@@ -133,7 +154,7 @@ class User
 		@languages = user["languages"].map { |lang| Language.new(lang) }
 	end
 
-	def get_posts(order="top", count=nil, after=nil)
+	def get_posts(order: "new", count: nil, after: nil)
 		p = @client.graphql(
 			"ProfilePosts",
 			Queries.get_user_posts,
@@ -143,10 +164,22 @@ class User
 			after: after
 		)
 		posts = Array.new
-		p["user"]["posts"]["items"].each do |post|
-			posts << Post.new(@client, post)
-		end
+		p["user"]["posts"]["items"].each { |post| posts << Post.new(@client, post) }
 		posts
+	end
+
+	def get_comments(order: "new", count: nil, after: nil)
+		c = @client.graphql(
+			"ProfileComments",
+			Queries.get_user_comments,
+			username: @username,
+			order: order,
+			count: count,
+			after: after
+		)
+		comments = Array.new
+		c["user"]["comments"]["items"].each { |comment| comments << Comment.new(@client, comment) }
+		comments
 	end
 
 	def to_s

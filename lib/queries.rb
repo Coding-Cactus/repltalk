@@ -165,12 +165,6 @@ class Queries
 				color
 				__typename
 			}
-			recentComments(count: 3) {
-				id
-				...SimpleCommentComment
-				__typename
-			}
-			__typename
 		}
 
 		fragment PostVoteControlPost on Post {
@@ -220,18 +214,92 @@ class Queries
 				__typename
 			}
 			__typename
-		}
+		}"
+	end
 
-		fragment SimpleCommentComment on Comment {
-			id
-			user {
+	def Queries.get_user_comments
+		"query ProfileComments($username: String!, $after: String, $order: String, $count: Int) {
+			user: userByUsername(username: $username) {
 				id
-				...UserLabelUser
-				...UserLinkUser
+				displayName
+				comments(after: $after, order: $order, count: $count) {
+					items {
+						id
+						...ProfileCommentsComment
+						__typename
+					}
+					pageInfo {
+						nextCursor
+						__typename
+					}
+					__typename
+				}
 				__typename
 			}
-			preview(removeMarkdown: true, length: 500)
+		}
+
+		fragment ProfileCommentsComment on Comment {
+			id
+			body
 			timeCreated
+			url
+			...CommentVoteControlComment
+			user {
+				id
+				fullName
+				username
+				image
+				bio
+				karma
+				isHacker
+				roles {
+					id
+					name
+					key
+					tagline
+					__typename
+				}
+				organization {
+					id
+					name
+					__typename
+				}
+				languages {
+					id
+					key
+					displayName
+					tagline
+					icon
+					__typename
+				}
+			}
+			post {
+				id
+				title
+				url
+				user {
+					id
+					username
+					url
+					__typename
+				}
+				board {
+					id
+					name
+					url
+					slug
+					__typename
+				}
+				__typename
+			}
+			__typename
+		}
+
+		fragment CommentVoteControlComment on Comment {
+			id
+			voteCount
+			canVote
+			hasVoted
 			__typename
 		}"
 	end

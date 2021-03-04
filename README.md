@@ -34,7 +34,8 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#is_hacker` Whether the user has the hacker plan
 + `#roles` User's roles. Returns an array of `Role`s
 + `#languages` Languages that the user has used. Returns array of `Language`s
-+ `#get_posts order, count, after` Get the user's posts. All arguments are optional. Order defaults to 'top'. Count defaults to 30. After defaults to 0. Returns array of `Post`s
++ `#get_posts :order, :count, :after` Get the user's posts. All arguments are optional (e.g. you can do `#get_post count: 50`). Order defaults to 'new'. Count defaults to 30. After defaults to 0. Returns array of `Post`s
++ `#get_comments :order, :count, :after` Get the user's comments. All arguments are optional (e.g. you can do `#get_comment count: 50`). Order defaults to 'new'. Count defaults to 30. After defaults to 0. Returns array of `Comment`s
 
 ### Post
 + `#id` Post's id
@@ -55,6 +56,12 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#is_locked` Whether the post is locked
 + `#is_hidden` Whether the post is hidden (unlisted)
 
+### Comment
++ `#id` Comment's id
++ `#url` Comment's url
++ `#author` Comment's author. Returns `User`
++ `#content` Comment's content
++ `#vote_count` How many votes teh comment has
 
 ### Role
 + `#name` Role's name
