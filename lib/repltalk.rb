@@ -2,6 +2,8 @@ require "http"
 require "json"
 require_relative "queries"
 
+$BASE_URL = "https://repl.it"
+
 class Role
 	attr_reader :name, :key, :tagline
 
@@ -58,7 +60,7 @@ class Repl
 		@client = client
 
 		@id = repl["id"]
-		@url = repl["url"]
+		@url = $BASE_URL + repl["url"]
 		@title = repl["title"]
 		@author = User.new(@client, repl["user"])
 		@description = repl["description"]
@@ -98,7 +100,7 @@ class Comment
 		@client = client
 
 		@id = comment["id"]
-		@url = comment["url"]
+		@url = $BASE_URL + comment["url"]
 		@author = comment["user"] == nil ? "[deleted user]" : User.new(@client, comment["user"])
 		@content = comment["body"]
 		@post_id = comment["post"]["id"]
@@ -134,7 +136,7 @@ class Post
 		@client = client
 		
 		@id = post["id"]
-		@url = post["url"]
+		@url = $BASE_URL + post["url"]
 		@title = post["title"]
 		@content = post["body"]
 		@preview = post["preview"]
@@ -157,6 +159,18 @@ class Post
 		@is_pinned = post["isPinned"]
 		@is_locked = post["isLocked"]
 		@is_announcement = post["isAnnouncement"]
+	end
+
+	def get_comments(order: "new", count: nil, after: nil)
+		c = @client.graphql(
+			"post",
+			Queries.get_posts_comments,
+			postId: @id,
+			order: order,
+			count: count,
+			after: after
+		)
+		c["post"]["comments"]["items"].map { |comment| Comment.new(@client, comment) }
 	end
 
 	def to_s
@@ -234,11 +248,11 @@ class Client
 					"connect.sid": @sid
 				)
 				.headers(
-					referer: "https://repl.it/@CodingCactus/repltalk",
+					referer: "#{$BASE_URL}/@CodingCactus/repltalk",
 					"X-Requested-With": "ReplTalk"
 				)
 				.post(
-					"https://repl.it/graphql", 
+					"#{$BASE_URL}/graphql", 
 					form: payload
 				)
 		begin data = JSON.parse(r)

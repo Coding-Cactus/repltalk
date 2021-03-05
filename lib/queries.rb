@@ -154,6 +154,18 @@ class Queries
 		}"
 	end
 
+	def Queries.get_posts_comments
+		"query post($postId: Int!, $order: String, $count: Int, $after: String) {
+			post(id: $postId) {
+				comments(order: $order, count: $count, after: $after) {
+					items {
+						#{@@comment}
+					}
+				}
+			}
+		}"
+	end
+
 	def Queries.get_comment
 		"query comment ($id: Int!) {
 			comment(id: $id) {

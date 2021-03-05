@@ -3,12 +3,14 @@
 
 A ruby client for the [repl talk](https://repl.it/talk) gql api.
 
-### Gemfile
+# Getting Started
+
+## Gemfile
 ```
 gem "repltalk"
 ```
 
-### Getting Started
+## Initializing Client
 
 ```ruby
 require "repltalk"
@@ -20,14 +22,25 @@ Once you have your client initialized, you can start getting users, posts, comme
 
 ***
 
-### Client
+## Code Snippets
+A few small snippets of examples of what you can do with the repltalk gem
+
+#### Getting CodingCactus' posts from the top 100 posts:
+```ruby
+client.get_posts(order: "votes", count: 100).select { |post| post.author.username == "CodingCactus" }
+```
+
+***
+# All Methods Documentation
+
+## Client
 + `#get_user username` Get a user from their username. Returns `User`
 + `#get_user_by_id id` Get a user from their id. Returns `User`
 + `#get_post id` Get a post from it's id. Returns `Post`
 + `#get_comment id` Get a comment from it's id. Returns `Comment`
 + `#get_posts :board, :order, :count, :after, :search, :languages` Get posts from repltalk. All arguments are optional. Board defaults to "all". Order defaults "new". Count defaults to 30. The rest default to nil. The languages argument should be an array of lamguage ids. Returns array of `Post`s
 
-### User
+## User
 + `#id` User's id
 + `#username` User's username
 + `#name` User's full name
@@ -41,7 +54,7 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#get_posts :order, :count, :after` Get the user's posts. All arguments are optional (e.g. you can do `#get_post count: 50`). Order defaults to 'new'. Count defaults to 30. After defaults to 0. Returns array of `Post`s
 + `#get_comments :order, :count, :after` Get the user's comments. All arguments are optional (e.g. you can do `#get_comment count: 50`). Order defaults to 'new'. Count defaults to 30. After defaults to 0. Returns array of `Comment`s
 
-### Post
+## Post
 + `#id` Post's id
 + `#url` Post's url
 + `#repl` Repl attatched to the post. Returns nil if there is none. Else returns `Repl`
@@ -59,8 +72,9 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#is_pinned` Whether the post is pinned
 + `#is_locked` Whether the post is locked
 + `#is_hidden` Whether the post is hidden (unlisted)
++ `#get_comments :order, :count, :after` Get the post's comments. Returns array of `Comment`s
 
-### Comment
+## Comment
 + `#id` Comment's id
 + `#url` Comment's url
 + `#author` Comment's author. Returns `User`
@@ -72,23 +86,23 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#comments` Get the children comments of the comment. Returns array of `Comments`
 + `#get_post` Get the post that the comment was made on. Returns `Post`
 
-### Role
+## Role
 + `#name` Role's name
 + `#key` Role's key
 + `#tagline` Role's tagline
 
-### Organization
+## Organization
 + `#id` Organization's id
 + `#name` Organization's name
 
-### Language
+## Language
 + `#id` Language's id (like 'python3' or 'html')
 + `#key` Language's key
 + `#name` Language's name (like 'Python' or 'HTML, CSS, JS')
 + `#tagline` Language's tagline
 + `#icon` URL of the language's icon
 
-### Repl
+## Repl
 + `#id` Repl's id
 + `#url` Repl's URL
 + `#title` Repl's name
@@ -98,7 +112,7 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#is_private` Whetehr the repl is private
 + `#is_always_on` Whether the repl is always on
 
-### Board
+## Board
 + `#id` Board's id
 + `#name` Board's name
 + `#color` Board's color
