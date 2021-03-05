@@ -92,6 +92,7 @@ Once you have your client initialized, you can start getting users, posts, comme
 + `#id` Repl's id
 + `#url` Repl's URL
 + `#title` Repl's name
++ `#author` Repl's author. Returns `User`
 + `#description` Repl's description
 + `#language` Repl's language. Returns `Language`
 + `#is_private` Whetehr the repl is private

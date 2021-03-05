@@ -52,12 +52,15 @@ end
 
 
 class Repl
-	attr_reader :id, :url, :title, :description, :language, :is_private, :is_always_on
+	attr_reader :id, :url, :title, :author, :description, :language, :is_private, :is_always_on
 
-	def initialize(repl)
+	def initialize(client, repl)
+		@client = client
+
 		@id = repl["id"]
 		@url = repl["url"]
 		@title = repl["title"]
+		@author = User.new(@client, repl["user"])
 		@description = repl["description"]
 		@language = Language.new(repl["lang"])
 
@@ -138,7 +141,7 @@ class Post
 		@timestamp = post["timeCreated"]
 
 		@board = Board.new(post["board"])
-		@repl = post["repl"] == nil ? nil : Repl.new(post["repl"])
+		@repl = post["repl"] == nil ? nil : Repl.new(@client, post["repl"])
 		@author = post["user"] == nil ? "[deleted user]" : User.new(@client, post["user"])
 
 		@vote_count = post["voteCount"]
@@ -240,6 +243,10 @@ class Client
 				)
 		begin data = JSON.parse(r)
 		rescue
+			puts "\e[31mERROR\n#{r}\e[0m"
+			return nil
+		end
+		if data.include?("errors")
 			puts "\e[31mERROR\n#{r}\e[0m"
 			return nil
 		end
