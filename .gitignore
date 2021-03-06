@@ -1,3 +1,4 @@
 .bundle/
 *.gem
 main.rb
+schema.txt

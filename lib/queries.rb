@@ -50,6 +50,7 @@ class Queries
 		url
 		title
 		description
+		imageUrl
 		isPrivate
 		isAlwaysOn
 		lang {
@@ -57,6 +58,35 @@ class Queries
 		}
 		user {
 			#{@@user}
+		}
+	"
+
+	@@comment = "
+		id
+		body
+		timeCreated
+		url
+		isAnswer
+		voteCount
+		canVote
+		hasVoted
+		user {
+			#{@@user}
+		}
+		post {
+			id
+		}
+	"
+
+	@@repl_comment = "
+		id
+		body
+		timeCreated
+		user {
+			#{@@user}
+		}
+		repl {
+			#{@@repl}
 		}
 	"
 
@@ -86,22 +116,8 @@ class Queries
 		board {
 			#{@@board}
 		}
-	"
-
-	@@comment = "
-		id
-		body
-		timeCreated
-		url
-		isAnswer
-		voteCount
-		canVote
-		hasVoted
-		user {
-			#{@@user}
-		}
-		post {
-			id
+		answer {
+			#{@@comment}
 		}
 	"
 
@@ -123,7 +139,7 @@ class Queries
 	end
 
 	def Queries.get_user_posts
-		"query ProfilePosts($username: String!, $after: String, $order: String, $count: Int) {
+		"query user($username: String!, $after: String, $order: String, $count: Int) {
 			user: userByUsername(username: $username) {
 				posts(after: $after, order: $order, count: $count) {
 					items {
@@ -135,11 +151,23 @@ class Queries
 	end
 
 	def Queries.get_user_comments
-		"query ProfileComments($username: String!, $after: String, $order: String, $count: Int) {
+		"query user($username: String!, $after: String, $order: String, $count: Int) {
 			user: userByUsername(username: $username) {
 				comments(after: $after, order: $order, count: $count) {
 					items {
 						#{@@comment}
+					}
+				}
+			}
+		}"
+	end
+
+	def Queries.get_user_repls
+		"query user($username: String!, $count: Int, $order: String, $direction: String, $before: String, $after: String, $pinnedReplsFirst: Boolean, $showUnnamed: Boolean) {
+			user: userByUsername(username: $username) {
+				publicRepls(count: $count, order: $order, direction: $direction, before: $before, after: $after, pinnedReplsFirst: $pinnedReplsFirst, showUnnamed: $showUnnamed) {
+					items {
+						#{@@repl}
 					}
 				}
 			}
@@ -166,10 +194,85 @@ class Queries
 		}"
 	end
 
+	def Queries.get_posts_upvoters
+		"query post($id: Int!, $count: Int) {
+			post(id: $id) {
+				votes(count: $count) {
+					items {
+						user {
+							#{@@user}
+						}
+					}
+				}
+			}
+		}"
+	end
+
 	def Queries.get_comment
 		"query comment ($id: Int!) {
 			comment(id: $id) {
 				#{@@comment}
+			}
+		}"
+	end
+
+	def Queries.get_comments_comments		
+		"query comment ($id: Int!) {
+			comment(id: $id) {
+				comments {
+					#{@@comment}
+				}
+			}
+		}"
+	end
+
+	def Queries.get_parent_comment
+		"query comment ($id: Int!) {
+			comment(id: $id) {
+				parentComment {
+					#{@@comment}
+				}
+			}
+		}"
+	end
+
+	def Queries.get_repl
+		"query ReplView($url: String!) {
+			repl(url: $url) {
+				... on Repl {
+					#{@@repl}
+				}
+			}
+		}"
+	end
+
+	def Queries.get_repl_forks
+		"query ReplViewForks($url: String!, $count: Int!, $after: String) {
+			repl(url: $url) {
+				... on Repl {
+					publicForks(count: $count, after: $after) {
+						items {
+							#{@@repl}
+						}
+					}
+				}
+			}
+		}"
+	end
+
+	def Queries.get_repl_comments
+		"query ReplViewComments($url: String!, $count: Int, $after: String) {
+			repl(url: $url) {
+				... on Repl {
+					comments(count: $count, after: $after) {
+						items {
+							#{@@repl_comment}
+							replies {
+								#{@@repl_comment}
+							}
+						}
+					}
+				}
 			}
 		}"
 	end

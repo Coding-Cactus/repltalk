@@ -53,8 +53,28 @@ end
 
 
 
+class ReplComment
+	attr_reader :id, :content, :author, :repl, :replies
+
+	def initialize(client, comment)
+		@client = client
+
+		@id = comment["id"]
+		@content = comment["body"]
+		@author = comment["user"] == nil ? "[deleted user]" : User.new(@client, comment["user"])
+		@repl = Repl.new(@client, comment["repl"])
+		@replies = comment["replies"] == nil ? nil : comment["replies"].map { |c| ReplComment.new(@client, c) }
+	end
+
+	def to_s
+		@content
+	end
+end
+
+
+
 class Repl
-	attr_reader :id, :url, :title, :author, :description, :language, :is_private, :is_always_on
+	attr_reader :id, :url, :title, :author, :description, :language, :img_url, :is_private, :is_always_on
 
 	def initialize(client, repl)
 		@client = client
@@ -65,9 +85,32 @@ class Repl
 		@author = User.new(@client, repl["user"])
 		@description = repl["description"]
 		@language = Language.new(repl["lang"])
+		@image_url = repl["imageUrl"]
 
 		@is_private = repl["isPrivate"]
 		@is_always_on = repl["isAlwaysOn"]
+	end
+
+	def get_forks(count: 100, after: nil)
+		f = @client.graphql(
+			"ReplViewForks",
+			Queries.get_repl_forks,
+			url: @url,
+			count: count,
+			after: after
+		)
+		f["repl"]["publicForks"]["items"].map { |repl| Repl.new(@client, repl) }
+	end
+
+	def get_comments(count: nil, after: nil)
+		c = @client.graphql(
+			"ReplViewComments",
+			Queries.get_repl_comments,
+			url: @url,
+			count: count,
+			after: after
+		)
+		c["repl"]["comments"]["items"].map { |comment| ReplComment.new(@client, comment) }
 	end
 
 	def to_s
@@ -94,7 +137,7 @@ end
 
 
 class Comment
-	attr_reader :id, :url, :author, :content, :post_id, :is_answer, :vote_count, :timestamp, :comments, :can_vote, :has_voted
+	attr_reader :id, :url, :author, :content, :post_id, :is_answer, :vote_count, :timestamp, :can_vote, :has_voted
 
 	def initialize(client, comment)
 		@client = client
@@ -107,7 +150,6 @@ class Comment
 		@is_answer = comment["isAnswer"]
 		@vote_count = comment["voteCount"]
 		@timestamp = comment["timeCreated"]
-		@comments = comment.include?("comments") ? comment["comments"].map { |c| Comment.new(@client, c)} : Array.new
 
 		@can_vote = comment["canVote"]
 		@has_voted = comment["hasVoted"]
@@ -119,7 +161,25 @@ class Comment
 			Queries.get_post,
 			id: @post_id
 		)
-		Post.new(self, p["post"])
+		Post.new(@client, p["post"])
+	end
+
+	def get_comments
+		c = @client.graphql(
+			"comment",
+			Queries.get_comments_comments,
+			id: @id
+		)
+		c["comment"]["comments"].map { |comment| Comment.new(@client, comment) }
+	end
+
+	def get_parent
+		c = @client.graphql(
+			"comment",
+			Queries.get_parent_comment,
+			id: @id
+		)
+		c["comment"]["parentComment"] == nil ? nil : Comment.new(@client, c["comment"]["parentComment"])
 	end
 
 	def to_s
@@ -130,7 +190,7 @@ end
 
 
 class Post
-	attr_reader :id, :url, :repl, :board, :title, :author, :content, :preview, :timestamp, :vote_count, :comment_count, :can_vote, :has_voted, :is_answered, :is_answerable, :is_hidden, :is_pinned, :is_locked, :is_announcement
+	attr_reader :id, :url, :repl, :board, :title, :author, :answer, :content, :preview, :timestamp, :vote_count, :comment_count, :can_vote, :has_voted, :is_answered, :is_answerable, :is_hidden, :is_pinned, :is_locked, :is_announcement
 
 	def initialize(client, post)
 		@client = client
@@ -145,6 +205,7 @@ class Post
 		@board = Board.new(post["board"])
 		@repl = post["repl"] == nil ? nil : Repl.new(@client, post["repl"])
 		@author = post["user"] == nil ? "[deleted user]" : User.new(@client, post["user"])
+		@answer = post["answer"] == nil ? nil : Comment.new(@client, post["answer"])
 
 		@vote_count = post["voteCount"]
 		@comment_count = post["commentCount"]
@@ -171,6 +232,16 @@ class Post
 			after: after
 		)
 		c["post"]["comments"]["items"].map { |comment| Comment.new(@client, comment) }
+	end
+
+	def get_upvotes(count: nil)
+		u = @client.graphql(
+			"post",
+			Queries.get_posts_upvoters,
+			id: @id,
+			count: count
+		)
+		u["post"]["votes"]["items"].map { |vote| User.new(@client, vote["user"]) }
 	end
 
 	def to_s
@@ -201,7 +272,7 @@ class User
 
 	def get_posts(order: "new", count: nil, after: nil)
 		p = @client.graphql(
-			"ProfilePosts",
+			"user",
 			Queries.get_user_posts,
 			username: @username,
 			order: order,
@@ -213,7 +284,7 @@ class User
 
 	def get_comments(order: "new", count: nil, after: nil)
 		c = @client.graphql(
-			"ProfileComments",
+			"user",
 			Queries.get_user_comments,
 			username: @username,
 			order: order,
@@ -221,6 +292,22 @@ class User
 			after: after
 		)
 		c["user"]["comments"]["items"].map { |comment| Comment.new(@client, comment) }
+	end
+
+	def get_repls(count: nil, order: nil, direction: nil, before: nil, after: nil, pinnedReplsFirst: nil, showUnnamed: nil)
+		r = @client.graphql(
+			"user",
+			Queries.get_user_repls,
+			username: @username,
+			order: order,
+			count: count,
+			direction: direction,
+			before: before,
+			after: after,
+			pinnedReplsFirst: pinnedReplsFirst,
+			showUnnamed: showUnnamed
+		)
+		r["user"]["publicRepls"]["items"].map { |repl| Repl.new(@client, repl) }
 	end
 
 	def to_s
@@ -302,6 +389,15 @@ class Client
 			id: id
 		)
 		Comment.new(self, c["comment"])
+	end
+
+	def get_repl(url)
+		r = graphql(
+			"ReplView",
+			Queries.get_repl,
+			url: url
+		)
+		Repl.new(self, r["repl"])
 	end
 	
 	def get_posts(board: "all", order: "new", count: nil, after: nil, search: nil, languages: nil)

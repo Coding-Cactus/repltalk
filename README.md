@@ -22,12 +22,32 @@ Once you have your client initialized, you can start getting users, posts, comme
 
 ***
 
-## Code Snippets
+# Code Snippets
 A few small snippets of examples of what you can do with the repltalk gem
 
-#### Getting CodingCactus' posts from the top 100 posts:
+### Get CodingCactus' posts from the top 100 posts:
 ```ruby
 client.get_posts(order: "votes", count: 100).select { |post| post.author.username == "CodingCactus" }
+```
+
+### Get the 10 most recent ruby post's URLs
+```ruby
+client.get_posts(count: 10, languages: ['ruby']).map { |post| post.url }
+```
+
+### See how many people have forked CodingCactus' classrooms repl
+```ruby
+client.get_repl("/@CodingCactus/classrooms").get_forks(count: 999999999).length
+```
+
+### See how many comments in a post mention CodingCactus
+```ruby
+mentions = 0
+client.get_post(33995).get_comments(count: 999999999).each do |comment|
+	mentions += 1 if comment.content.include?("@CodingCactus")
+	comment.get_comments.each { |child_comment| mentions += 1 if child_comment.content.include?("@CodingCactus") }
+	sleep 0.25 # need to be careful with rate limits
+end
 ```
 
 ***
@@ -38,7 +58,8 @@ client.get_posts(order: "votes", count: 100).select { |post| post.author.usernam
 + `#get_user_by_id id` Get a user from their id. Returns `User`
 + `#get_post id` Get a post from it's id. Returns `Post`
 + `#get_comment id` Get a comment from it's id. Returns `Comment`
-+ `#get_posts :board, :order, :count, :after, :search, :languages` Get posts from repltalk. All arguments are optional. Board defaults to "all". Order defaults "new". Count defaults to 30. The rest default to nil. The languages argument should be an array of lamguage ids. Returns array of `Post`s
++ `#get_repl url` Get a repl from it's url. Returns `Repl`
++ `#get_posts :board, :order, :count, :after, :search, :languages` Get posts from repltalk. The languages argument should be an array of lamguage ids. Returns array of `Post`s
 
 ## User
 + `#id` User's id
@@ -51,8 +72,9 @@ client.get_posts(order: "votes", count: 100).select { |post| post.author.usernam
 + `#is_hacker` Whether the user has the hacker plan
 + `#roles` User's roles. Returns an array of `Role`s
 + `#languages` Languages that the user has used. Returns array of `Language`s
-+ `#get_posts :order, :count, :after` Get the user's posts. All arguments are optional (e.g. you can do `#get_post count: 50`). Order defaults to 'new'. Count defaults to 30. After defaults to 0. Returns array of `Post`s
-+ `#get_comments :order, :count, :after` Get the user's comments. All arguments are optional (e.g. you can do `#get_comment count: 50`). Order defaults to 'new'. Count defaults to 30. After defaults to 0. Returns array of `Comment`s
++ `#get_posts :order, :count, :after` Get the user's posts. Returns array of `Post`s
++ `#get_comments :order, :count, :after` Get the user's comments. Returns array of `Comment`s
++ `get_repls :count, :order, :direction, :before, :after, :pinnedReplsFirst, :showUnnamed` Get the user's repls. Returns array of `Repl`s
 
 ## Post
 + `#id` Post's id
@@ -66,12 +88,14 @@ client.get_posts(order: "votes", count: 100).select { |post| post.author.usernam
 + `#timestamp` When the post was posted
 + `#vote_count` How many votes there post has
 + `#comment_count` How many comments the post has
++ `#answer` The comment that has been marked as the answer. Returns `nil` if there is none, else `Comment`
 + `#is_answered` Whether an answer has been selected
 + `#is_answerable` Whether you are able to answer the post
 + `#is_announcement` Whether the post in marked as an announcement
 + `#is_pinned` Whether the post is pinned
 + `#is_locked` Whether the post is locked
 + `#is_hidden` Whether the post is hidden (unlisted)
++ `#get_upvotes :count` Get the users that have upvoted the post. Count defaults to 10. Returns array or `User`s
 + `#get_comments :order, :count, :after` Get the post's comments. Returns array of `Comment`s
 
 ## Comment
@@ -83,24 +107,9 @@ client.get_posts(order: "votes", count: 100).select { |post| post.author.usernam
 + `#is_answer` Whether the comment has been selected as the answer to a post
 + `#vote_count` How many votes teh comment has
 + `#timestamp` When the comment was made
-+ `#comments` Get the children comments of the comment. Returns array of `Comments`
 + `#get_post` Get the post that the comment was made on. Returns `Post`
-
-## Role
-+ `#name` Role's name
-+ `#key` Role's key
-+ `#tagline` Role's tagline
-
-## Organization
-+ `#id` Organization's id
-+ `#name` Organization's name
-
-## Language
-+ `#id` Language's id (like 'python3' or 'html')
-+ `#key` Language's key
-+ `#name` Language's name (like 'Python' or 'HTML, CSS, JS')
-+ `#tagline` Language's tagline
-+ `#icon` URL of the language's icon
++ `#get_comments` Get the children comments of the comment. Returns array of `Comment`s
++ `#get_parent` Get the parent comment of a child comment. Returns `nil` if it ins't child, else `Comment`
 
 ## Repl
 + `#id` Repl's id
@@ -109,8 +118,34 @@ client.get_posts(order: "votes", count: 100).select { |post| post.author.usernam
 + `#author` Repl's author. Returns `User`
 + `#description` Repl's description
 + `#language` Repl's language. Returns `Language`
++ `#image_url` Repl image's url
 + `#is_private` Whetehr the repl is private
 + `#is_always_on` Whether the repl is always on
++ `#get_forks` Repl's forks. Returns array of `Repl`s
++ `#get_comments` Repl's comments. Returns array of `ReplComment`s
+
+## ReplComment
++ `#id` Comment's id
++ `#content` Comment's content
++ `#author` Comment's author. Returns `User`
++ `#repl` Repl the comment was made on. Returns `Repl`
++ `#replies` Comment's replies. Returns array of `ReplComment`s
+
+## Language
++ `#id` Language's id (like 'python3' or 'html')
++ `#key` Language's key
++ `#name` Language's name (like 'Python' or 'HTML, CSS, JS')
++ `#tagline` Language's tagline
++ `#icon` URL of the language's icon
+
+## Organization
++ `#id` Organization's id
++ `#name` Organization's name
+
+## Role
++ `#name` Role's name
++ `#key` Role's key
++ `#tagline` Role's tagline
 
 ## Board
 + `#id` Board's id
