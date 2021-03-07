@@ -339,4 +339,14 @@ class Mutations < Queries
 			}
 		}"
 	end
+
+	def Mutations.create_comment
+		"mutation createComment($input: CreateCommentInput!) {
+			createComment(input: $input) {
+				comment {
+					#{@@comment}
+				}
+			}
+		}"
+	end
 end

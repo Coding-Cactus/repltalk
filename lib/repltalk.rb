@@ -208,6 +208,19 @@ class Comment
 		c["comment"]["parentComment"] == nil ? nil : Comment.new(@client, c["comment"]["parentComment"])
 	end
 
+	def create_comment(content)
+		c = @client.graphql(
+			"createComment",
+			Mutations.create_comment,
+			input: {
+				postId: @post_id,
+				commentId: @id,
+				body: content
+			}
+		)
+		Comment.new(@client, c["createComment"]["comment"])
+	end
+
 	def to_s
 		@content
 	end
@@ -268,6 +281,18 @@ class Post
 			count: count
 		)
 		u["post"]["votes"]["items"].map { |vote| User.new(@client, vote["user"]) }
+	end
+
+	def create_comment(content)
+		c = @client.graphql(
+			"createComment",
+			Mutations.create_comment,
+			input: {
+				postId: @id,
+				body: content
+			}
+		)
+		Comment.new(@client, c["createComment"]["comment"])
 	end
 
 	def to_s
