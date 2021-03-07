@@ -112,7 +112,8 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#get_comments :order, :count, :after` Get the post's comments. Returns array of `Comment`s
 + `#create_comment  content` Comment on the post. Returns `Comment`
 + `#edit :title, :content, :repl_id, :show_hosted` Edit the post. Returns `Post`
-+ `#delete` delete the post
++ `#delete` Delete the post
++ `#report reason` Report the post
 
 ## Comment
 + `#id` Comment's id
@@ -129,6 +130,7 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#create_comment content` reply to the comment. Returns `Comment`
 + `#edit content` Edit the comment. Returns `Comment`
 + `#delete` Delete the comment
++ `#report reason` Report the comment
 
 ## Repl
 + `#id` Repl's id

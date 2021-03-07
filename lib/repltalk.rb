@@ -242,6 +242,16 @@ class Comment
 		nil
 	end
 
+	def report(reason)
+		@client.graphql(
+			"createBoardReport",
+			Mutations.report_comment,
+			id: @id,
+			reason: reason
+		)
+		nil
+	end
+
 	def to_s
 		@content
 	end
@@ -336,6 +346,16 @@ class Post
 			"deletePost",
 			Mutations.delete_post,
 			id: @id
+		)
+		nil
+	end
+
+	def report(reason)
+		@client.graphql(
+			"createBoardReport",
+			Mutations.report_post,
+			id: @id,
+			reason: reason
 		)
 		nil
 	end

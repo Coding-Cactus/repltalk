@@ -386,4 +386,20 @@ class Mutations < Queries
 			}
 		}"
 	end
+
+	def Mutations.report_post
+		"mutation createBoardReport($id: Int!, $reason: String!) {
+			createBoardReport(postId: $id, reason: $reason) {
+				id
+			}
+		}"
+	end
+
+	def Mutations.report_comment
+		"mutation createBoardReport($id: Int!, $reason: String!) {
+			createBoardReport(commentId: $id, reason: $reason) {
+				id
+			}
+		}"
+	end
 end
