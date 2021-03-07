@@ -2,3 +2,4 @@
 *.gem
 main.rb
 schema.txt
+.env

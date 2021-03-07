@@ -438,6 +438,15 @@ class Client
 		Repl.new(self, r["repl"])
 	end
 
+	def get_board(name)
+		b = graphql(
+			"boardBySlug",
+			Queries.get_board,
+			slug: name
+		)
+		Board.new(b["board"])
+	end
+
 	def get_leaderboard(count: nil, since: nil, after: nil)
 		u = graphql(
 			"LeaderboardQuery",
@@ -461,5 +470,20 @@ class Client
 			languages: languages
 		)
 		p["posts"]["items"].map { |post| Post.new(self, post) }
+	end
+
+	def create_post(board_name, title, content, repl_id: nil, show_hosted: false)
+		p = graphql(
+			"createPost",
+			Mutations.create_post,
+			input: {
+				boardId: get_board(board_name).id,
+				title: title,
+				body: content,
+				replId: repl_id,
+				showHosted: show_hosted
+			}
+		)
+		Post.new(self, p["createPost"]["post"])
 	end
 end

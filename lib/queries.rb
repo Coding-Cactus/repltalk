@@ -298,6 +298,14 @@ class Queries
 		}"
 	end
 
+	def Queries.get_board
+		"query boardBySlug($slug: String!) {
+			board: boardBySlug(slug: $slug) {
+				#{@@board}
+			}
+		}"
+	end
+
 	def Queries.get_posts
 		"query PostsFeed($order: String, $after: String, $searchQuery: String, $languages: [String!], $count: Int, $boardSlugs: [String!], $pinAnnouncements: Boolean, $pinPinned: Boolean) {
 			posts(order: $order, after: $after, searchQuery: $searchQuery, languages: $languages, count: $count, boardSlugs: $boardSlugs, pinAnnouncements: $pinAnnouncements, pinPinned: $pinPinned) {
@@ -314,6 +322,19 @@ class Queries
 				items {
 					#{@@user}
 					karmaSince: karma(since: $since)
+				}
+			}
+		}"
+	end
+end
+
+
+class Mutations < Queries
+	def Mutations.create_post
+		"mutation createPost($input: CreatePostInput!) {
+			createPost(input: $input) {
+				post {
+					#{@@post}
 				}
 			}
 		}"
