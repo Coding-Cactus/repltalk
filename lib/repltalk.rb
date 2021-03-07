@@ -317,6 +317,17 @@ end
 
 
 
+class LeaderboardUser < User
+	attr_reader :cycles_since
+
+	def initialize(client, user)
+		super(client, user)
+		@cycles_since = user["karmaSince"]
+	end
+end
+
+
+
 class Client
 	attr_writer :sid
 
@@ -398,6 +409,17 @@ class Client
 			url: url
 		)
 		Repl.new(self, r["repl"])
+	end
+
+	def get_leaderboard(count: nil, since: nil, after: nil)
+		u = graphql(
+			"LeaderboardQuery",
+			Queries.get_leaderboard,
+			count: count,
+			since: since,
+			after: after
+		)
+		u["leaderboard"]["items"].map { |user| LeaderboardUser.new(self, user) }
 	end
 	
 	def get_posts(board: "all", order: "new", count: nil, after: nil, search: nil, languages: nil)

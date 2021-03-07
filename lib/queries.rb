@@ -286,4 +286,15 @@ class Queries
 			}
 		}"
 	end
+
+	def Queries.get_leaderboard
+		"query LeaderboardQuery($count: Int, $after: String, $since: KarmaSince) {
+			leaderboard(count: $count, after: $after, since: $since) {
+				items {
+					#{@@user}
+					karmaSince: karma(since: $since)
+				}
+			}
+		}"
+	end
 end
