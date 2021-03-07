@@ -111,6 +111,8 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#get_upvotes :count` Get the users that have upvoted the post. Count defaults to 10. Returns array or `User`s
 + `#get_comments :order, :count, :after` Get the post's comments. Returns array of `Comment`s
 + `#create_comment  content` Comment on the post. Returns `Comment`
++ `#edit :title, :content, :repl_id, :show_hosted` Edit the post. Returns `Post`
++ `#delete` delete the post
 
 ## Comment
 + `#id` Comment's id
@@ -119,12 +121,14 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#content` Comment's content
 + `#post_id` Id of the post that the comment is on
 + `#is_answer` Whether the comment has been selected as the answer to a post
-+ `#vote_count` How many votes teh comment has
++ `#vote_count` How many votes the comment has
 + `#timestamp` When the comment was made
 + `#get_post` Get the post that the comment was made on. Returns `Post`
 + `#get_comments` Get the children comments of the comment. Returns array of `Comment`s
-+ `#get_parent` Get the parent comment of a child comment. Returns `nil` if it ins't child, else `Comment`
++ `#get_parent` Get the parent comment of a child comment. Returns `nil` if it ins't a child, else `Comment`
 + `#create_comment content` reply to the comment. Returns `Comment`
++ `#edit content` Edit the comment. Returns `Comment`
++ `#delete` Delete the comment
 
 ## Repl
 + `#id` Repl's id
@@ -136,7 +140,7 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#language` Repl's language. Returns `Language`
 + `#image_url` Repl image's url
 + `#origin_url` Url of the repl from which this repl was forked
-+ `#is_private` Whetehr the repl is private
++ `#is_private` Whether the repl is private
 + `#is_always_on` Whether the repl is always on
 + `#get_forks` Repl's forks. Returns array of `Repl`s
 + `#get_comments` Repl's comments. Returns array of `ReplComment`s

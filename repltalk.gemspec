@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
 	s.name        = 'repltalk'
-	s.version     = '1.2.0'
+	s.version     = '1.3.0'
 	s.license     = 'MIT'
 	s.summary     = "A ruby client for the repltalk api"
 	s.description = "With the repltalk gem, you can easily interect with the repltalk graphql api. See https://github.com/Coding-Cactus/repltalk for documentation"

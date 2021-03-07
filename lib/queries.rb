@@ -340,12 +340,49 @@ class Mutations < Queries
 		}"
 	end
 
+	def Mutations.edit_post
+		"mutation updatePost($input: UpdatePostInput!) {
+			updatePost(input: $input) {
+				post {
+					#{@@post}
+				}
+			}
+		}
+		"
+	end
+
+	def Mutations.delete_post
+		"mutation deletePost($id: Int!) {
+			deletePost(id: $id) {
+				id
+			}
+		}"
+	end
+
 	def Mutations.create_comment
 		"mutation createComment($input: CreateCommentInput!) {
 			createComment(input: $input) {
 				comment {
 					#{@@comment}
 				}
+			}
+		}"
+	end
+
+	def Mutations.edit_comment
+		"mutation updateComment($input: UpdateCommentInput!) {
+			updateComment(input: $input) {
+				comment {
+					#{@@comment}
+				}
+			}
+		}"
+	end
+
+	def Mutations.delete_comment
+		"mutation deleteComment($id: Int!) {
+			deleteComment(id: $id) {
+				id
 			}
 		}"
 	end

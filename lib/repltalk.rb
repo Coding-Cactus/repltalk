@@ -221,6 +221,27 @@ class Comment
 		Comment.new(@client, c["createComment"]["comment"])
 	end
 
+	def edit(content)
+		c = @client.graphql(
+			"updateComment",
+			Mutations.edit_comment,
+			input: {
+				id: @id,
+				body: content
+			}
+		)
+		Comment.new(@client, c["updateComment"]["comment"])
+	end
+
+	def delete
+		@client.graphql(
+			"deleteComment",
+			Mutations.delete_comment,
+			id: @id
+		)
+		nil
+	end
+
 	def to_s
 		@content
 	end
@@ -293,6 +314,30 @@ class Post
 			}
 		)
 		Comment.new(@client, c["createComment"]["comment"])
+	end
+
+	def edit(title: @title, content: @content, repl_id: @repl.id, show_hosted: false)
+		p = @client.graphql(
+			"updatePost",
+			Mutations.edit_post,
+			input: {
+				id: @id,
+				title: title,
+				body: content,
+				replId: repl_id,
+				showHosted: show_hosted
+			}
+		)
+		Post.new(@client, p["updatePost"]["post"])
+	end
+
+	def delete
+		@client.graphql(
+			"deletePost",
+			Mutations.delete_post,
+			id: @id
+		)
+		nil
 	end
 
 	def to_s
