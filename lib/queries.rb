@@ -9,6 +9,18 @@ class Queries
 	@@organization = "	
 		id
 		name
+		country
+		postalCode
+		state
+		city
+		timeCreated
+	"
+
+	@@subscription = "
+		id
+		planId
+		quantity
+		timeCreated
 	"
 
 	@@language = "
@@ -17,12 +29,14 @@ class Queries
 		displayName
 		tagline
 		icon
+		category
 	"
 
 	@@board = "
 		id
 		name
 		color
+		description
 	"
 
 	@@user = "
@@ -40,6 +54,9 @@ class Queries
 		organization {
 			#{@@organization}
 		}
+		subscription { 
+			#{@@subscription}
+		}
 		languages {
 			#{@@language}
 		}
@@ -50,6 +67,7 @@ class Queries
 		url
 		title
 		description
+		size
 		imageUrl
 		isPrivate
 		isAlwaysOn
@@ -58,6 +76,9 @@ class Queries
 		}
 		user {
 			#{@@user}
+		}
+		origin {
+			url
 		}
 	"
 
