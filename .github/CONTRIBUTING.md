@@ -11,5 +11,5 @@ If it is a bug, give exact recreation steps i.e:
 
 ### Pull Request
 + make sure that your code follows the same style as the rest of the repo
-+ if you are adding a query, make sure use the attributes already defined as class variables
++ if you are adding a query, make sure use the attributes which are already defined as class variables
 + update the readme
