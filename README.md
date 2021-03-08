@@ -56,6 +56,14 @@ position = 0
 client.get_leaderboard.each_with_index { |user, index| position = index + 1 if user.username == "CodingCactus" }
 ```
 
+### See how many repls of each language CodingCactus has
+```ruby
+lang_count = client.get_user("CodingCactus").get_repls(count: 999999).reduce(Hash.new(0)) do |langs, repl|
+  langs[repl.language.id] += 1
+  langs
+end
+```
+
 ***
 # All Methods Documentation
 
