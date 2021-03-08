@@ -76,6 +76,23 @@ end
 
 
 
+class Board
+	attr_reader :id, :name, :color, :description
+
+	def initialize(board)
+		@id = board["id"]
+		@name = board["name"]
+		@color = board["color"]
+		@description = board["description"]
+	end
+
+	def to_s
+		@name
+	end
+end
+
+
+
 class ReplComment
 	attr_reader :id, :content, :author, :repl, :replies
 
@@ -87,6 +104,40 @@ class ReplComment
 		@author = comment["user"] == nil ? "[deleted user]" : User.new(@client, comment["user"])
 		@repl = Repl.new(@client, comment["repl"])
 		@replies = comment["replies"] == nil ? nil : comment["replies"].map { |c| ReplComment.new(@client, c) }
+	end
+
+	def create_comment(content)
+		c = @client.graphql(
+			"ReplViewCreateReplCommentReply",
+			Mutations.reply_repl_comment,
+			input: {
+				replCommentId: @id,
+				body: content
+			}
+		)
+		ReplComment.new(@client, c["createReplCommentReply"])
+	end
+
+	def edit(content)
+		c = @client.graphql(
+			"ReplViewCommentsUpdateReplComment",
+			Mutations.edit_repl_comment,
+			input: {
+				id: @id,
+				body: content
+			}
+		)
+		puts c
+		ReplComment.new(@client, c["updateReplComment"])
+	end
+
+	def delete
+		@client.graphql(
+			"ReplViewCommentsDeleteReplComment",
+			Mutations.delete_repl_comment,
+			id: @id
+		)
+		nil
 	end
 
 	def to_s
@@ -138,25 +189,20 @@ class Repl
 		c["repl"]["comments"]["items"].map { |comment| ReplComment.new(@client, comment) }
 	end
 
+	def create_comment(content)
+		c = @client.graphql(
+			"ReplViewCreateReplComment",
+			Mutations.create_repl_comment,
+			input: {
+				replId: @id,
+				body: content
+			}
+		)
+		ReplComment.new(@client, c["createReplComment"])
+	end
+
 	def to_s
 		@title
-	end
-end
-
-
-
-class Board
-	attr_reader :id, :name, :color, :description
-
-	def initialize(board)
-		@id = board["id"]
-		@name = board["name"]
-		@color = board["color"]
-		@description = board["description"]
-	end
-
-	def to_s
-		@name
 	end
 end
 
@@ -526,6 +572,15 @@ class Client
 			url: url
 		)
 		Repl.new(self, r["repl"])
+	end
+
+	def get_repl_comment(id)
+		c = graphql(
+			"ReplViewComment",
+			Queries.get_repl_comment,
+			id: id
+		)
+		ReplComment.new(self, c["replComment"])
 	end
 
 	def get_board(name)

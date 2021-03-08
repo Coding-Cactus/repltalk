@@ -298,6 +298,17 @@ class Queries
 		}"
 	end
 
+	def Queries.get_repl_comment
+		"query ReplViewComment($id: Int!) {
+			replComment(id: $id) {
+				... on ReplComment {
+						#{@@repl_comment}
+				}
+			}
+		}"
+	end
+
+
 	def Queries.get_board
 		"query boardBySlug($slug: String!) {
 			board: boardBySlug(slug: $slug) {
@@ -386,6 +397,46 @@ class Mutations < Queries
 			}
 		}"
 	end
+
+	def Mutations.create_repl_comment
+		"mutation ReplViewCreateReplComment($input: CreateReplCommentInput!) {
+			createReplComment(input: $input) {
+				... on ReplComment {
+					#{@@repl_comment}
+				}
+			}
+		}"
+	end
+
+	def Mutations.reply_repl_comment
+		"mutation ReplViewCreateReplCommentReply($input: CreateReplCommentReplyInput!) {
+			createReplCommentReply(input: $input) {
+				... on ReplComment {
+					#{@@repl_comment}
+				}
+			}
+		}"
+	end
+
+	def Mutations.edit_repl_comment
+		"mutation ReplViewCommentsUpdateReplComment($input: UpdateReplCommentInput!) {
+			updateReplComment(input: $input) {
+				... on ReplComment {
+					#{@@repl_comment}
+				}
+			}
+		}"
+	end
+
+	def Mutations.delete_repl_comment
+		"mutation ReplViewCommentsDeleteReplComment($id: Int!) {
+			deleteReplComment(id: $id) {
+				... on ReplComment {
+					id
+				}
+			}
+		}"
+end
 
 	def Mutations.report_post
 		"mutation createBoardReport($id: Int!, $reason: String!) {
