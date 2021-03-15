@@ -76,7 +76,7 @@ end
 + `#get_repl_comment id` Get a repl comment from its id. Returns `ReplComment`
 + `#get_board name` Get a board from it's name. Returns `Board`
 + `#get_leaderboard :count, :since, :after` Get the users from the leaderboard. Since should be one of `PAST_24_HOURS, PAST_7_DAYS, PAST_30_DAYS, PAST_YEAR` (is all time by default). Returns array of `LeaderboardUser`s
-+ `#get_posts :board, :order, :count, :after, :search, :languages` Get posts from repltalk. The languages argument should be an array of lamguage ids. Returns array of `Post`s
++ `#get_posts :board, :order, :count, :after, :search, :languages` Get posts from repltalk. The languages argument should be an array of language ids. Returns array of `Post`s
 + `#create_post board_name, title, content, :repl_id, :show_hosted` Create a repl talk post. Returns `Post`
 
 ## User

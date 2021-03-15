@@ -607,7 +607,7 @@ class Client
 		p = graphql(
 			"PostsFeed",
 			Queries.get_posts,
-			baordSlugs: [board],
+			boardSlugs: [board],
 			order: order,
 			count: count,
 			after: after,
