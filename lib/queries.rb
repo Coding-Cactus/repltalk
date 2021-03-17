@@ -1,4 +1,4 @@
-class Queries
+class Fields
 	@@roles = "
 		id
 		name
@@ -141,8 +141,10 @@ class Queries
 			#{@@comment}
 		}
 	"
+end
 
 
+class Queries < Fields
 	def Queries.get_user
 		"query userByUsername($username: String!) {
 			user: userByUsername(username: $username) {
@@ -340,7 +342,7 @@ class Queries
 end
 
 
-class Mutations < Queries
+class Mutations < Fields
 	def Mutations.create_post
 		"mutation createPost($input: CreatePostInput!) {
 			createPost(input: $input) {
