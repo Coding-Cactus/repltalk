@@ -101,8 +101,8 @@ class ReplComment
 
 		@id = comment["id"]
 		@content = comment["body"]
-		@author = comment["user"] == nil ? "[deleted user]" : User.new(@client, comment["user"])
-		@repl = Repl.new(@client, comment["repl"])
+		@author = comment["user"] == nil ? nil : User.new(@client, comment["user"])
+		@repl = comment["repl"] == nil ? nil : Repl.new(@client, comment["repl"])
 		@replies = comment["replies"] == nil ? nil : comment["replies"].map { |c| ReplComment.new(@client, c) }
 	end
 
@@ -127,7 +127,6 @@ class ReplComment
 				body: content
 			}
 		)
-		puts c
 		ReplComment.new(@client, c["updateReplComment"])
 	end
 
@@ -320,7 +319,7 @@ class Post
 
 		@board = Board.new(post["board"])
 		@repl = post["repl"] == nil ? nil : Repl.new(@client, post["repl"])
-		@author = post["user"] == nil ? "[deleted user]" : User.new(@client, post["user"])
+		@author = post["user"] == nil ? nil : User.new(@client, post["user"])
 		@answer = post["answer"] == nil ? nil : Comment.new(@client, post["answer"])
 
 		@vote_count = post["voteCount"]
@@ -417,6 +416,7 @@ class User
 	attr_reader :id, :username, :name, :pfp, :bio, :cycles, :is_hacker, :timestamp, :subscription, :roles, :organization, :languages
 
 	def initialize(client, user)
+		return nil if user == nil
 		@client = client
 
 		@id = user["id"]
@@ -535,6 +535,7 @@ class Client
 			Queries.get_user,
 			username: name
 		)
+		return nil if u == nil || u["user"] == nil
 		User.new(self, u["user"])
 	end
 
@@ -544,6 +545,7 @@ class Client
 			Queries.get_user_by_id,
 			user_id: id
 		)
+		return nil if u == nil || u["user"] == nil
 		User.new(self, u["user"])
 	end
 
@@ -553,6 +555,7 @@ class Client
 			Queries.get_post,
 			id: id
 		)
+		return nil if p == nil || p["post"] == nil
 		Post.new(self, p["post"])
 	end
 
@@ -562,6 +565,7 @@ class Client
 			Queries.get_comment,
 			id: id
 		)
+		return nil if c == nil || c["comment"] == nil
 		Comment.new(self, c["comment"])
 	end
 
@@ -571,6 +575,7 @@ class Client
 			Queries.get_repl,
 			url: url
 		)
+		return nil if  r == nil || r["repl"] == nil
 		Repl.new(self, r["repl"])
 	end
 
@@ -580,6 +585,7 @@ class Client
 			Queries.get_repl_comment,
 			id: id
 		)
+		return nil if c == nil || c["replComment"] == nil
 		ReplComment.new(self, c["replComment"])
 	end
 
@@ -589,6 +595,7 @@ class Client
 			Queries.get_board,
 			slug: name
 		)
+		return nil if b == nil || b["board"] == nil
 		Board.new(b["board"])
 	end
 
