@@ -147,6 +147,7 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#title` Repl's name
 + `#author` Repl's author. Returns `User`
 + `#description` Repl's description
++ `#timestamp` When the repl was made
 + `#size` How many bytes the repl is
 + `#language` Repl's language. Returns `Language`
 + `#image_url` Repl image's url

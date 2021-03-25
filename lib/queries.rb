@@ -67,6 +67,7 @@ class Fields
 		url
 		title
 		description
+		timeCreated
 		size
 		imageUrl
 		isPrivate

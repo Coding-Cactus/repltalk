@@ -147,7 +147,7 @@ end
 
 
 class Repl
-	attr_reader :id, :url, :title, :author, :description, :size, :language, :img_url, :origin_url, :is_private, :is_always_on
+	attr_reader :id, :url, :title, :author, :description, :timestamp, :size, :language, :img_url, :origin_url, :is_private, :is_always_on
 
 	def initialize(client, repl)
 		@client = client
@@ -157,6 +157,7 @@ class Repl
 		@title = repl["title"]
 		@author = User.new(@client, repl["user"])
 		@description = repl["description"]
+		@timestamp = repl["timeCreated"]
 		@size = repl["size"]
 		@language = Language.new(repl["lang"])
 		@image_url = repl["imageUrl"]
