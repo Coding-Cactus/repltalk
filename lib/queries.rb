@@ -162,6 +162,14 @@ class Queries < Fields
 		}"
 	end
 
+	def Queries.user_search
+		"query usernameSearch($username: String!, $count: Int) {
+			usernameSearch(query: $username, limit: $count) {
+				#{@@user}
+			}
+		}"
+	end
+
 	def Queries.get_user_posts
 		"query user($username: String!, $after: String, $order: String, $count: Int) {
 			user: userByUsername(username: $username) {
@@ -439,7 +447,7 @@ class Mutations < Fields
 				}
 			}
 		}"
-end
+	end
 
 	def Mutations.report_post
 		"mutation createBoardReport($id: Int!, $reason: String!) {

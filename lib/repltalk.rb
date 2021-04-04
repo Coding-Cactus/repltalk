@@ -550,6 +550,17 @@ class Client
 		User.new(self, u["user"])
 	end
 
+	def search_user(username, count: 10)
+		u = graphql(
+			"usernameSearch",
+			Queries.user_search,
+			username: username,
+			count: count
+		)
+		return nil if u["usernameSearch"] == nil
+		u["usernameSearch"].map { |user| User.new(self, user) }
+	end
+
 	def get_post(id)
 		p = graphql(
 			"post",

@@ -70,6 +70,7 @@ end
 ## Client
 + `#get_user username` Get a user from their username. Returns `User`
 + `#get_user_by_id id` Get a user from their id. Returns `User`
++ `#search_user query, :count` Search for users whose username start with the query. Returns array of `User`s. **Need to be logged in, unfortunately**
 + `#get_post id` Get a post from it's id. Returns `Post`
 + `#get_comment id` Get a comment from it's id. Returns `Comment`
 + `#get_repl url` Get a repl from it's url. Returns `Repl`
