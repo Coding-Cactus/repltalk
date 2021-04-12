@@ -1,6 +1,6 @@
 module ReplTalk
-    module GQL
-        module Fields
+	module GQL
+		module Fields
 			ROLES = "
 				id
 				name
@@ -147,7 +147,7 @@ module ReplTalk
 		end
 
 
-        module Queries
+		module Queries
 			GET_USER = "
 				query userByUsername($username: String!) {
 					user: userByUsername(username: $username) {
@@ -353,7 +353,7 @@ module ReplTalk
 		end
 
 
-        module Mutations
+		module Mutations
 			include Fields
 
 			CREATE_POST = "
@@ -468,5 +468,5 @@ module ReplTalk
 				}
 			"
 		end
-    end
+	end
 end

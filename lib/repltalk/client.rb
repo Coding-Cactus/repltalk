@@ -2,7 +2,7 @@ require "http"
 require "json"
 
 module ReplTalk
-    class Client
+	class Client
 		attr_writer :sid
 
 		def initialize(sid=nil)

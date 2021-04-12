@@ -2,7 +2,7 @@ require "http"
 require "json"
 
 module ReplTalk
-    class Role
+	class Role
 		attr_reader :name, :key, :tagline
 
 		def initialize(role)
