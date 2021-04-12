@@ -1,7 +1,7 @@
 <p align="center"><img alt="repltak" src="https://repltalk-logo.codingcactus.repl.co/logo.png" /></p>
 
 
-A ruby client for the [repl talk](https://repl.it/talk) gql api.
+A ruby wrapper for the [repl talk](https://repl.it/talk) gql api.
 
 # Getting Started
 
@@ -15,7 +15,7 @@ gem "repltalk"
 ```ruby
 require "repltalk"
 
-client = Client.new
+client = ReplTalk::Client.new
 ```
 
 Once you have your client initialized, you can start getting users, posts, comments etc.
