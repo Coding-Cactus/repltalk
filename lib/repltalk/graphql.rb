@@ -18,13 +18,6 @@ module ReplTalk
 				timeCreated
 			"
 
-			SUBSCRIPTION = "
-				id
-				planId
-				quantity
-				timeCreated
-			"
-
 			LANGUAGE = "
 				id
 				key
@@ -55,9 +48,6 @@ module ReplTalk
 				}
 				organization {
 					#{ORGANIZATION}
-				}
-				subscription { 
-					#{SUBSCRIPTION}
 				}
 				languages {
 					#{LANGUAGE}

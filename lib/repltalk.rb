@@ -4,5 +4,5 @@ require_relative "repltalk/structures"
 
 module ReplTalk
 	$BASE_URL = "https://repl.it"
-	VERSION = "3.0.0"
+	VERSION = "3.1.0"
 end

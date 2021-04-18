@@ -38,23 +38,6 @@ module ReplTalk
 
 
 
-	class Subscription
-		attr_reader :id, :plan_id, :quantity, :timestamp
-
-		def initialize(subscription)
-			@id = subscription["id"]
-			@plan_id = subscription["planId"]
-			@quantity = subscription["quantity"]
-			@timestamp = subscription["timeCreated"]
-		end
-
-		def to_s
-			@plan_id
-		end
-	end
-
-
-
 	class Language
 		attr_reader :id, :key, :name, :tagline, :icon, :category
 
@@ -426,7 +409,6 @@ module ReplTalk
 			@cycles = user["karma"]
 			@is_hacker = user["isHacker"]
 			@timestamp = user["timeCreated"]
-			@subscription = user["subscription"] == nil ? nil : Subscription.new(user["subscription"])
 			@roles = user["roles"].map { |role| Role.new(role) }
 			@organization = user["organization"] == nil ? nil : Organization.new(user["organization"])
 			@languages = user["languages"].map { |lang| Language.new(lang) }

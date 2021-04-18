@@ -90,7 +90,6 @@ end
 + `#timestamp` When the account was made
 + `#is_hacker` Whether the user has the hacker plan
 + `#roles` User's roles. Returns an array of `Role`s
-+ `#subscription` User's subscription. Returns `Subscription`
 + `#languages` Languages that the user has used. Returns array of `Language`s
 + `#get_posts :order, :count, :after` Get the user's posts. Returns array of `Post`s
 + `#get_comments :order, :count, :after` Get the user's comments. Returns array of `Comment`s
@@ -176,12 +175,6 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#tagline` Language's tagline
 + `#category` Category that the language is in
 + `#icon` URL of the language's icon
-
-## Subscription
-+ `#id` Ssubscription id
-+ `#plan_id` Id of the purchased plan
-+ `#quantity` Quantity of the purchase
-+ `#timestamp` When the plan was purchased
 
 ## Organization
 + `#id` Organization's id
