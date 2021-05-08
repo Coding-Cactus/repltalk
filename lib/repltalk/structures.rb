@@ -74,6 +74,54 @@ module ReplTalk
 
 
 
+	class Tag
+		attr_reader :id, :repl_count, :creator_count, :is_trending, :repls_tagged_today_count
+
+		def initialize(client, tag)
+			@client = client
+
+			@id = tag["id"]
+			@repl_count = tag["replCount"]
+			@is_trending = tag["isTrending"]
+			@creator_count = tag["creatorCount"]
+			@repls_tagged_today_count = tag["replsTaggedTodayCount"]
+		end
+
+		def get_repls(after: nil)
+			r = @client.graphql(
+				"ExploreTrendingRepls",
+				GQL::Queries::GET_TAGS_REPLS,
+				tag: @id,
+				after: after
+			)
+			r["tag"]["repls"]["items"].map { |repl| Repl.new(@client, repl) }
+		end
+
+		def to_s
+			@id
+		end
+	end
+
+
+
+
+	class Reaction
+		attr_reader :id, :type, :count
+
+		def initialize(reaction)
+			@id = reaction["id"]
+			@type = reaction["type"]
+			@count = reaction["count"]
+		end
+
+		def to_s
+			@type
+		end
+	end
+
+
+
+
 	class ReplComment
 		attr_reader :id, :content, :author, :repl, :replies
 
@@ -128,7 +176,7 @@ module ReplTalk
 
 
 	class Repl
-		attr_reader :id, :url, :title, :author, :description, :timestamp, :size, :language, :img_url, :origin_url, :is_private, :is_always_on
+		attr_reader :id, :url, :title, :author, :description, :timestamp, :size, :run_count, :fork_count, :language, :img_url, :origin_url, :is_private, :is_always_on, :tags, :reactions
 
 		def initialize(client, repl)
 			@client = client
@@ -140,12 +188,17 @@ module ReplTalk
 			@description = repl["description"]
 			@timestamp = repl["timeCreated"]
 			@size = repl["size"]
+			@run_count = repl["runCount"]
+			@fork_count = repl["publicForkCount"]
 			@language = Language.new(repl["lang"])
 			@image_url = repl["imageUrl"]
 			@origin_url = repl["origin"] == nil ? nil : $BASE_URL + repl["origin"]["url"]
 
 			@is_private = repl["isPrivate"]
 			@is_always_on = repl["isAlwaysOn"]
+
+			@tags = repl["tags"].map { |tag| Tag.new(@client, tag) }
+			@reactions = repl["reactions"].map { |reaction| Reaction.new(reaction) }
 		end
 
 		def get_forks(count: 100, after: nil)
@@ -180,6 +233,63 @@ module ReplTalk
 				}
 			)
 			ReplComment.new(@client, c["createReplComment"])
+		end
+
+		def add_reaction(type)
+			r = @client.graphql(
+				"ReplViewReactionsToggleReactions",
+				GQL::Mutations::TOGGLE_REACTION,
+				input: {
+					replId: @id,
+					react: true,
+					reactionType: type
+				}
+			)
+			if r["setReplReaction"]["reactions"] == nil
+				@reactions
+			else
+				@reactions = r["setReplReaction"]["reactions"].map { |reaction| Reaction.new(reaction) }
+			end
+		end
+
+		def remove_reaction(type)
+			r = @client.graphql(
+				"ReplViewReactionsToggleReactions",
+				GQL::Mutations::TOGGLE_REACTION,
+				input: {
+					replId: @id,
+					react: false,
+					reactionType: type
+				}
+			)
+			@reactions = r["setReplReaction"]["reactions"].map { |reaction| Reaction.new(reaction) }
+		end
+
+		def publish(description, image_url, tags, enable_comments: true)
+			r = @client.graphql(
+				"PublishRepl",
+				GQL::Mutations::PUBLISH_REPL,
+				input: {
+					replId: @id,
+					replTitle: @title,
+					description: description,
+					imageUrl: image_url,
+					tags: tags,
+					enableComments: enable_comments,
+				}
+			)
+			Repl.new(@client, r["publishRepl"])
+		end
+
+		def unpublish
+			r = @client.graphql(
+				"ReplViewHeaderActionsUnpublishRepl",
+				GQL::Mutations::UNPUBLISH_REPL,
+				input: {
+					replId: @id
+				}
+			)
+			Repl.new(@client, r["unpublishRepl"])
 		end
 
 		def to_s

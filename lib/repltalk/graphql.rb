@@ -54,6 +54,20 @@ module ReplTalk
 				}
 			"
 
+			TAG = "
+				id
+				replCount
+				replsTaggedTodayCount
+				creatorCount
+				isTrending
+			"
+
+			REACTIONS = "
+				id
+				type
+				count
+			"
+
 			REPL = "
 				id
 				url
@@ -61,9 +75,17 @@ module ReplTalk
 				description
 				timeCreated
 				size
+				runCount
+				publicForkCount
 				imageUrl
 				isPrivate
 				isAlwaysOn
+				tags {
+					#{TAG}
+				}
+				reactions {
+					#{REACTIONS}
+				}
 				lang {
 					#{LANGUAGE}
 				}
@@ -340,6 +362,42 @@ module ReplTalk
 					}
 				}
 			"
+
+			GET_EXPLORE_FEATURED_REPLS = "
+				query ExploreFeaturedRepls {
+					featuredRepls {
+						#{Fields::REPL}
+					}
+				}
+			"
+
+			GET_TAG = "
+				query ExploreTrendingRepls($tag: String!) {
+					tag(id: $tag) {
+						#{Fields::TAG}
+					}
+				}
+			"
+
+			GET_TRENDING_TAGS = "
+				query ExploreTrendingRepls($tag: String!) {
+					tag(id: $tag) {
+						#{Fields::TAG}
+					}
+				}
+			"
+
+			GET_TAGS_REPLS = "
+				query ExploreTrendingRepls($tag: String!, $after: String) {
+					tag(id: $tag) {
+						repls(after: $after) {
+							items {
+								#{Fields::REPL}
+							}
+						}
+					}
+				}
+			"
 		end
 
 
@@ -437,6 +495,38 @@ module ReplTalk
 					deleteReplComment(id: $id) {
 						... on ReplComment {
 							id
+						}
+					}
+				}
+			"
+
+			PUBLISH_REPL = "
+				mutation PublishRepl($input: PublishReplInput!) {
+					publishRepl(input: $input) {
+						... on Repl {
+							#{Fields::REPL}
+						}
+					}
+				}
+			"
+
+			UNPUBLISH_REPL = "
+				mutation ReplViewHeaderActionsUnpublishRepl($input: UnpublishReplInput!) {
+					unpublishRepl(input: $input) {
+						... on Repl {
+							#{Fields::REPL}
+						}
+					}
+				}
+			"
+
+			TOGGLE_REACTION = "
+				mutation ReplViewReactionsToggleReactions($input: SetReplReactionInput!) {
+					setReplReaction(input: $input) {
+						... on Repl {
+							reactions {
+								#{Fields::REACTIONS}
+							}
 						}
 					}
 				}

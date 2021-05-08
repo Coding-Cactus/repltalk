@@ -37,7 +37,7 @@ client.get_posts(count: 10, languages: ['ruby']).map { |post| post.url }
 
 ### See how many people have forked CodingCactus' classrooms repl
 ```ruby
-client.get_repl("/@CodingCactus/classrooms").get_forks(count: 999999999).length
+client.get_repl("/@CodingCactus/classrooms").fork_count
 ```
 
 ### See how many comments in a post mention CodingCactus
@@ -96,12 +96,12 @@ end
 + `get_repls :count, :order, :direction, :before, :after, :pinnedReplsFirst, :showUnnamed` Get the user's repls. Returns array of `Repl`s
 
 ## LeaderboardUser
-Exact same as `User` exepts has `#cycles_since` which is show many cyces the user got since a certain time (24 hrs, 7 days, 30 days, 1 year, all time) depending on what type of leaderboard you have
+Exact same as `User` except it has `#cycles_since` which is show many cycles the user got since a certain time (24 hrs, 7 days, 30 days, 1 year, all time) depending on what type of leaderboard you have
 
 ## Post
 + `#id` Post's id
 + `#url` Post's url
-+ `#repl` Repl attatched to the post. Returns nil if there is none. Else returns `Repl`
++ `#repl` Repl attached to the post. Returns nil if there is none. Else returns `Repl`
 + `#board` Board that the post is from. Returns `Board`
 + `#title` Post's title
 + `#author` Post's author. Returns `User`
@@ -135,7 +135,7 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#timestamp` When the comment was made
 + `#get_post` Get the post that the comment was made on. Returns `Post`
 + `#get_comments` Get the children comments of the comment. Returns array of `Comment`s
-+ `#get_parent` Get the parent comment of a child comment. Returns `nil` if it ins't a child, else `Comment`
++ `#get_parent` Get the parent comment of a child comment. Returns `nil` if it isn't a child, else `Comment`
 + `#create_comment content` reply to the comment. Returns `Comment`
 + `#edit content` Edit the comment. Returns `Comment`
 + `#delete` Delete the comment
@@ -149,14 +149,23 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#description` Repl's description
 + `#timestamp` When the repl was made
 + `#size` How many bytes the repl is
++ `#run_count` How many times the repl has been run
++ `#fork_count` How many times the repl has been forked
 + `#language` Repl's language. Returns `Language`
 + `#image_url` Repl image's url
 + `#origin_url` Url of the repl from which this repl was forked
 + `#is_private` Whether the repl is private
 + `#is_always_on` Whether the repl is always on
++ `#tags` Tags tagged on the repl. Returns array of `Tag`s
++ `#reactions` Reactions reacted on the repl. Returs array of `Reaction`s
 + `#get_forks` Repl's forks. Returns array of `Repl`s
 + `#get_comments` Repl's comments. Returns array of `ReplComment`s
 + `#create_comment content` Comment on the repl
++ `#add_reaction type` Add a reaction to the repl
++ `#remove_reaction type` Remove a reaction from the repl
++ `#publish description, image_url, tags, :enable_comments` Publish the repl. Use this to publish an update too
++ `#unpublish` Unpublish the repl
+
 
 ## ReplComment
 + `#id` Comment's id
@@ -167,6 +176,19 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#create_comment content` Reply to the repl comment
 + `#edit content` Edit the repl comment
 + `#delete` Delete the repl comment
+
+## Tag
++ `#id` Tag's id (name)
++ `#repl_count` How many repls are listed under the tag
++ `#creator_count` How many different users are listed under the tag
++ `#is_trending` Whether the tag is trending
++ `#repls_tagged_today_count` How many repls have been published with the tag today
+
+## Reaction
++ `#id` Reaction's id
++ `#type` Reaction's type (heart, eyes etc.)
++ `#count` How many people have reacted with this reaction on the repl
+
 
 ## Language
 + `#id` Language's id (like 'python3' or 'html')
@@ -194,4 +216,4 @@ Exact same as `User` exepts has `#cycles_since` which is show many cyces the use
 + `#id` Board's id
 + `#name` Board's name
 + `#color` Board's color
-+ `#description` Borad's description
++ `#description` Brard's description

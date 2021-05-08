@@ -146,6 +146,31 @@ module ReplTalk
 			p["posts"]["items"].map { |post| Post.new(self, post) }
 		end
 
+		def get_explore_featured_repls
+			r = graphql(
+				"ExploreFeaturedRepls",
+				GQL::Queries::GET_EXPLORE_FEATURED_REPLS
+			)
+			r["featuredRepls"].map { |repl| Repl.new(self, repl) }
+		end
+
+		def get_trending_tags
+			t = graphql(
+				"ExploreFeed",
+				GQL::Queries::GET_TRENDING_TAGS
+			)
+			t["trendingTagsFeed"]["initialTags"].map { |tag| Tag.new(self, tag) }
+		end
+
+		def get_tag(tag)
+			t = graphql(
+				"ExploreTrendingRepls",
+				GQL::Queries::GET_TAG,
+				tag: tag
+			)
+			Tag.new(self, t["tag"])
+		end
+
 		def create_post(board_name, title, content, repl_id: nil, show_hosted: false)
 			p = graphql(
 				"createPost",
