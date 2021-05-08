@@ -80,7 +80,7 @@ end
 + `#get_posts :board, :order, :count, :after, :search, :languages` Get posts from repltalk. The languages argument should be an array of language ids. Returns array of `Post`s
 + `#create_post board_name, title, content, :repl_id, :show_hosted` Create a repl talk post. Returns `Post`
 + `#get_explore_reatured_repls` Get the feature repls on explore. Returns array of `Repl`s
-+ `#get_trending_tags` Get the tags which are trending on explore. Returns array of `Tag`same
++ `#get_trending_tags` Get the tags which are trending on explore. Returns array of `Tag`s
 + `#get_tag id` Get a tag. Returns `Tag`
 
 ## User
@@ -160,7 +160,7 @@ Exact same as `User` except it has `#cycles_since` which is show many cycles the
 + `#is_private` Whether the repl is private
 + `#is_always_on` Whether the repl is always on
 + `#tags` Tags tagged on the repl. Returns array of `Tag`s
-+ `#reactions` Reactions reacted on the repl. Returs array of `Reaction`s
++ `#reactions` Reactions reacted on the repl. Returns array of `Reaction`s
 + `#get_forks` Repl's forks. Returns array of `Repl`s
 + `#get_comments` Repl's comments. Returns array of `ReplComment`s
 + `#create_comment content` Comment on the repl
@@ -220,4 +220,4 @@ Exact same as `User` except it has `#cycles_since` which is show many cycles the
 + `#id` Board's id
 + `#name` Board's name
 + `#color` Board's color
-+ `#description` Brard's description
++ `#description` Board's description
