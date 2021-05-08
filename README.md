@@ -79,6 +79,9 @@ end
 + `#get_leaderboard :count, :since, :after` Get the users from the leaderboard. Since should be one of `PAST_24_HOURS, PAST_7_DAYS, PAST_30_DAYS, PAST_YEAR` (is all time by default). Returns array of `LeaderboardUser`s
 + `#get_posts :board, :order, :count, :after, :search, :languages` Get posts from repltalk. The languages argument should be an array of language ids. Returns array of `Post`s
 + `#create_post board_name, title, content, :repl_id, :show_hosted` Create a repl talk post. Returns `Post`
++ `#get_explore_reatured_repls` Get the feature repls on explore. Returns array of `Repl`s
++ `#get_trending_tags` Get the tags which are trending on explore. Returns array of `Tag`same
++ `#get_tag id` Get a tag. Returns `Tag`
 
 ## User
 + `#id` User's id
@@ -183,6 +186,7 @@ Exact same as `User` except it has `#cycles_since` which is show many cycles the
 + `#creator_count` How many different users are listed under the tag
 + `#is_trending` Whether the tag is trending
 + `#repls_tagged_today_count` How many repls have been published with the tag today
++ `#get_repls :after` Get the top 10 repls that have the tag. Returns array of `Repl`s
 
 ## Reaction
 + `#id` Reaction's id
