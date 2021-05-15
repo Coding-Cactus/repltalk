@@ -87,11 +87,12 @@ module ReplTalk
 			@repls_tagged_today_count = tag["replsTaggedTodayCount"]
 		end
 
-		def get_repls(after: nil)
+		def get_repls(count: nil, after: nil)
 			r = @client.graphql(
 				"ExploreTrendingRepls",
 				GQL::Queries::GET_TAGS_REPLS,
 				tag: @id,
+				count: count,
 				after: after
 			)
 			r["tag"]["repls"]["items"].map { |repl| Repl.new(@client, repl) }

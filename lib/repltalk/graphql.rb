@@ -380,17 +380,19 @@ module ReplTalk
 			"
 
 			GET_TRENDING_TAGS = "
-				query ExploreTrendingRepls($tag: String!) {
-					tag(id: $tag) {
-						#{Fields::TAG}
+				query ExploreFeed($count: Int) {
+					trendingTagsFeed(initialTagsCount: $count) {
+						initialTags {
+							#{Fields::TAG}
+						}
 					}
 				}
 			"
 
 			GET_TAGS_REPLS = "
-				query ExploreTrendingRepls($tag: String!, $after: String) {
+				query ExploreTrendingRepls($tag: String!, $count: Int, $after: String) {
 					tag(id: $tag) {
-						repls(after: $after) {
+						repls(limit: $count, after: $after) {
 							items {
 								#{Fields::REPL}
 							}

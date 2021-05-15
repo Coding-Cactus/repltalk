@@ -154,10 +154,11 @@ module ReplTalk
 			r["featuredRepls"].map { |repl| Repl.new(self, repl) }
 		end
 
-		def get_trending_tags
+		def get_trending_tags(count: nil)
 			t = graphql(
 				"ExploreFeed",
-				GQL::Queries::GET_TRENDING_TAGS
+				GQL::Queries::GET_TRENDING_TAGS,
+				count: count
 			)
 			t["trendingTagsFeed"]["initialTags"].map { |tag| Tag.new(self, tag) }
 		end
