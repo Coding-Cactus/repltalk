@@ -18,26 +18,6 @@ module ReplTalk
 
 
 
-	class Organization
-		attr_reader :id, :name, :country, :postal_code, :state, :city, :timestamp
-
-		def initialize(organization)
-			@id = organization["id"]
-			@name = organization["name"]
-			@country = organization["country"]
-			@postal_code = organization["postalCode"]
-			@state = organization["state"]
-			@city = organization["city"]
-			@timestamp = organization["timeCreated"]
-		end
-
-		def to_s
-			@name
-		end
-	end
-
-
-
 	class Language
 		attr_reader :id, :key, :name, :tagline, :icon, :category
 
@@ -400,7 +380,7 @@ module ReplTalk
 	class Post
 		attr_reader :id, :url, :repl, :board, :title, :author, :answer, :content, :preview, :timestamp, :vote_count, :comment_count, :can_vote, :has_voted, :is_answered, :is_answerable, :is_hidden, :is_pinned, :is_locked, :is_announcement
 
-		def initialize(client, post)
+		def initialize(client, post) 
 			@client = client
 			
 			@id = post["id"]
@@ -506,7 +486,7 @@ module ReplTalk
 
 
 	class User
-		attr_reader :id, :username, :name, :pfp, :bio, :cycles, :is_hacker, :timestamp, :subscription, :roles, :organization, :languages
+		attr_reader :id, :username, :name, :pfp, :bio, :cycles, :is_hacker, :timestamp, :subscription, :roles, :languages
 
 		def initialize(client, user)
 			return nil if user == nil
@@ -521,7 +501,6 @@ module ReplTalk
 			@is_hacker = user["isHacker"]
 			@timestamp = user["timeCreated"]
 			@roles = user["roles"].map { |role| Role.new(role) }
-			@organization = user["organization"] == nil ? nil : Organization.new(user["organization"])
 			@languages = user["languages"].map { |lang| Language.new(lang) }
 		end
 

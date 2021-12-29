@@ -8,16 +8,6 @@ module ReplTalk
 				tagline
 			"
 
-			ORGANIZATION = "	
-				id
-				name
-				country
-				postalCode
-				state
-				city
-				timeCreated
-			"
-
 			LANGUAGE = "
 				id
 				key
@@ -45,9 +35,6 @@ module ReplTalk
 				timeCreated
 				roles {
 					#{ROLES}
-				}
-				organization {
-					#{ORGANIZATION}
 				}
 				languages {
 					#{LANGUAGE}
@@ -343,8 +330,8 @@ module ReplTalk
 			"
 
 			GET_POSTS = "
-				query PostsFeed($order: String, $after: String, $searchQuery: String, $languages: [String!], $count: Int, $boardSlugs: [String!]) {
-					posts(order: $order, after: $after, searchQuery: $searchQuery, languages: $languages, count: $count, boardSlugs: $boardSlugs) {
+				query ReplPostsFeed($options: ReplPostsQueryOptions) {	
+					replPosts(options: $options) {		
 						items {
 							#{Fields::POST}
 						}

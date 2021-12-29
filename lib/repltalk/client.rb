@@ -132,18 +132,19 @@ module ReplTalk
 			u["leaderboard"]["items"].map { |user| LeaderboardUser.new(self, user) }
 		end
 		
-		def get_posts(board: "all", order: "new", count: nil, after: nil, search: nil, languages: nil)
+		def get_posts(board: "all", order: "New", count: nil, after: nil, search: nil)
 			p = graphql(
-				"PostsFeed",
+				"ReplPostsFeed",
 				GQL::Queries::GET_POSTS,
-				boardSlugs: [board],
-				order: order,
-				count: count,
-				after: after,
-				searchQuery: search,
-				languages: languages
+				options: {
+					boardSlugs: [board],
+					order: order,
+					count: count,
+					after: after,
+					searchQuery: search
+				}
 			)
-			p["posts"]["items"].map { |post| Post.new(self, post) }
+			p["replPosts"]["items"].map { |post| Post.new(self, post) }
 		end
 
 		def get_explore_featured_repls
