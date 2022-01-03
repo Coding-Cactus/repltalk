@@ -387,19 +387,20 @@ module ReplTalk
 			@url = $BASE_URL + post["url"]
 			@title = post["title"]
 			@timestamp = post["timeCreated"]
-			
-			@content = post["body"]
-			@preview = post["preview"]
-
-			if @content == ""
-				@content = post["replComment"]["body"]
-				@preview = @content.length > 150 ? @content[0..150] : @content
-			end
 
 			@board = Board.new(post["board"])
 			@repl = post["repl"] == nil ? nil : Repl.new(@client, post["repl"])
 			@author = post["user"] == nil ? nil : User.new(@client, post["user"])
 			@answer = post["answer"] == nil ? nil : Comment.new(@client, post["answer"])
+			
+			@content = post["body"]
+			@preview = post["preview"]
+
+			if @content == "" # new post type
+				@url = "#{@repl.url}?c=#{post["replComment"]["id"]}"
+				@content = post["replComment"]["body"]
+				@preview = @content.length > 150 ? @content[0..150] : @content
+			end			
 
 			@vote_count = post["voteCount"]
 			@comment_count = post["commentCount"]
