@@ -27,7 +27,7 @@ A few small snippets of examples of what you can do with the repltalk gem
 
 ### Get CodingCactus' posts from the top 100 posts:
 ```ruby
-client.get_posts(order: "votes", count: 100).select { |post| post.author.username == "CodingCactus" }
+client.get_posts(order: "Top", count: 100).select { |post| post.author.username == "CodingCactus" }
 ```
 
 ### Get the 10 most recent ruby post's URLs

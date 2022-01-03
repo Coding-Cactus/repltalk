@@ -136,6 +136,9 @@ module ReplTalk
 				repl {
 					#{REPL}
 				}
+				replComment {
+					#{REPL_COMMENT}
+				}
 				board {
 					#{BOARD}
 				}

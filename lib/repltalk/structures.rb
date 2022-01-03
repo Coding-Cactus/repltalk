@@ -380,15 +380,21 @@ module ReplTalk
 	class Post
 		attr_reader :id, :url, :repl, :board, :title, :author, :answer, :content, :preview, :timestamp, :vote_count, :comment_count, :can_vote, :has_voted, :is_answered, :is_answerable, :is_hidden, :is_pinned, :is_locked, :is_announcement
 
-		def initialize(client, post) 
+		def initialize(client, post)			
 			@client = client
 			
 			@id = post["id"]
 			@url = $BASE_URL + post["url"]
 			@title = post["title"]
+			@timestamp = post["timeCreated"]
+			
 			@content = post["body"]
 			@preview = post["preview"]
-			@timestamp = post["timeCreated"]
+
+			if @content == ""
+				@content = post["replComment"]["body"]
+				@preview = @content.length > 150 ? @content[0..150] : @content
+			end
 
 			@board = Board.new(post["board"])
 			@repl = post["repl"] == nil ? nil : Repl.new(@client, post["repl"])
