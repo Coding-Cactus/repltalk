@@ -380,7 +380,7 @@ module ReplTalk
 	class Post
 		attr_reader :id, :url, :repl, :board, :title, :author, :answer, :content, :preview, :timestamp, :vote_count, :comment_count, :can_vote, :has_voted, :is_answered, :is_answerable, :is_hidden, :is_pinned, :is_locked, :is_announcement
 
-		def initialize(client, post)			
+		def initialize(client, post)
 			@client = client
 			
 			@id = post["id"]

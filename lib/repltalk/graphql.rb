@@ -126,7 +126,7 @@ module ReplTalk
 				isAnnouncement
 				timeCreated
 				isAnswered
-				isAnswerable		
+				isAnswerable
 				voteCount
 				canVote
 				hasVoted

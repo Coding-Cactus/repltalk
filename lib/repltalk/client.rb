@@ -24,7 +24,7 @@ module ReplTalk
 						"X-Requested-With": "ReplTalk"
 					)
 					.post(
-						"#{$BASE_URL}/graphql", 
+						"#{$BASE_URL}/graphql",
 						form: payload
 					)
 			begin data = JSON.parse(r)
