@@ -121,13 +121,13 @@ module ReplTalk
 			Board.new(b["board"])
 		end
 		
-		def get_posts(board: "all", order: "New", count: nil, after: nil, search: nil)
+		def get_posts(board: "all", order: "new", count: nil, after: nil, search: nil)
 			p = graphql(
 				"ReplPostsFeed",
 				GQL::Queries::GET_POSTS,
 				options: {
 					boardSlugs: [board],
-					order: order,
+					order: order.capitalize,
 					count: count,
 					after: after,
 					searchQuery: search
