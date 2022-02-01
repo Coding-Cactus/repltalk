@@ -555,15 +555,4 @@ module ReplTalk
 			@username
 		end
 	end
-
-
-
-	class LeaderboardUser < User
-		attr_reader :cycles_since
-
-		def initialize(client, user)
-			super(client, user)
-			@cycles_since = user["karmaSince"]
-		end
-	end
 end

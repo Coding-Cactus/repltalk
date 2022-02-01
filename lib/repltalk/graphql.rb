@@ -342,17 +342,6 @@ module ReplTalk
 				}
 			"
 
-			GET_LEADERBOARD = "
-				query LeaderboardQuery($count: Int, $after: String, $since: KarmaSince) {
-					leaderboard(count: $count, after: $after, since: $since) {
-						items {
-							#{Fields::USER}
-							karmaSince: karma(since: $since)
-						}
-					}
-				}
-			"
-
 			GET_EXPLORE_FEATURED_REPLS = "
 				query ExploreFeaturedRepls {
 					featuredRepls {

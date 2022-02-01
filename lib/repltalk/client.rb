@@ -120,17 +120,6 @@ module ReplTalk
 			return nil if b == nil || b["board"] == nil
 			Board.new(b["board"])
 		end
-
-		def get_leaderboard(count: nil, since: nil, after: nil)
-			u = graphql(
-				"LeaderboardQuery",
-				GQL::Queries::GET_LEADERBOARD,
-				count: count,
-				since: since,
-				after: after
-			)
-			u["leaderboard"]["items"].map { |user| LeaderboardUser.new(self, user) }
-		end
 		
 		def get_posts(board: "all", order: "New", count: nil, after: nil, search: nil)
 			p = graphql(

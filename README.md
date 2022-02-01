@@ -50,12 +50,6 @@ client.get_post(33995).get_comments(count: 999999999).each do |comment|
 end
 ```
 
-### See what position CodingCactus is in the all time leaderboard
-```ruby
-position = 0
-client.get_leaderboard.each_with_index { |user, index| position = index + 1 if user.username == "CodingCactus" }
-```
-
 ### See how many repls of each language CodingCactus has
 ```ruby
 lang_count = client.get_user("CodingCactus").get_repls(count: 999999).reduce(Hash.new(0)) do |langs, repl|
@@ -76,7 +70,6 @@ end
 + `#get_repl url` Get a repl from it's url. Returns `Repl`
 + `#get_repl_comment id` Get a repl comment from its id. Returns `ReplComment`
 + `#get_board name` Get a board from it's name. Returns `Board`
-+ `#get_leaderboard :count, :since, :after` Get the users from the leaderboard. Since should be one of `PAST_24_HOURS, PAST_7_DAYS, PAST_30_DAYS, PAST_YEAR` (is all time by default). Returns array of `LeaderboardUser`s
 + `#get_posts :board, :order, :count, :after, :search` Get posts from repltalk. Returns array of `Post`s
 + `#create_post board_name, title, content, :repl_id, :show_hosted` Create a repl talk post. Returns `Post`
 + `#get_explore_featured_repls` Get the featured repls on explore. Returns array of `Repl`s
@@ -97,9 +90,6 @@ end
 + `#get_posts :order, :count, :after` Get the user's posts. Returns array of `Post`s
 + `#get_comments :order, :count, :after` Get the user's comments. Returns array of `Comment`s
 + `get_repls :count, :order, :direction, :before, :after, :pinnedReplsFirst, :showUnnamed` Get the user's repls. Returns array of `Repl`s
-
-## LeaderboardUser
-Exact same as `User` except it has `#cycles_since` which is show many cycles the user got since a certain time (24 hrs, 7 days, 30 days, 1 year, all time) depending on what type of leaderboard you have
 
 ## Post
 + `#id` Post's id
