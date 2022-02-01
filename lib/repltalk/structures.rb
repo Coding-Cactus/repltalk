@@ -396,7 +396,7 @@ module ReplTalk
 			@content = post["body"]
 			@preview = post["preview"]
 
-			if @content == "" # new post type
+			if @content == "" && @repl != nil # new post type
 				if post["replComment"].nil? # no post attached
 					@url = @repl.url
 					@title = @repl.title
