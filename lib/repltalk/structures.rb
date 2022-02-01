@@ -166,7 +166,7 @@ module ReplTalk
 			@url = $BASE_URL + repl["url"]
 			@title = repl["title"]
 			@author = User.new(@client, repl["user"])
-			@description = repl["description"]
+			@description = repl["description"].to_s
 			@timestamp = repl["timeCreated"]
 			@size = repl["size"]
 			@run_count = repl["runCount"]
@@ -388,7 +388,7 @@ module ReplTalk
 			@title = post["title"]
 			@timestamp = post["timeCreated"]
 
-			@board = Board.new(post["board"])
+			@board = post["board"].nil? ? nil : Board.new(post["board"])
 			@repl = post["repl"] == nil ? nil : Repl.new(@client, post["repl"])
 			@author = post["user"] == nil ? nil : User.new(@client, post["user"])
 			@answer = post["answer"] == nil ? nil : Comment.new(@client, post["answer"])
@@ -397,8 +397,14 @@ module ReplTalk
 			@preview = post["preview"]
 
 			if @content == "" # new post type
-				@url = "#{@repl.url}?c=#{post["replComment"]["id"]}"
-				@content = post["replComment"]["body"]
+				if post["replComment"].nil? # no post attached
+					@url = @repl.url
+					@title = @repl.title
+					@content = @repl.description
+				else # post attached
+					@url = "#{@repl.url}?c=#{post["replComment"]["id"]}"
+					@content = post["replComment"]["body"]
+				end
 				@preview = @content.length > 150 ? @content[0..150] : @content
 			end			
 
