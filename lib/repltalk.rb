@@ -4,5 +4,5 @@ require_relative "repltalk/structures"
 
 module ReplTalk
 	$BASE_URL = "https://replit.com"
-	VERSION = "4.2.0"
+	VERSION = "4.3.0"
 end
