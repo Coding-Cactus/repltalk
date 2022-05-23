@@ -46,13 +46,6 @@ module ReplTalk
 				replCount
 				replsTaggedTodayCount
 				creatorCount
-				isTrending
-			"
-
-			REACTIONS = "
-				id
-				type
-				count
 			"
 
 			REPL = "
@@ -69,9 +62,6 @@ module ReplTalk
 				isAlwaysOn
 				tags {
 					#{TAG}
-				}
-				reactions {
-					#{REACTIONS}
 				}
 				lang {
 					#{LANGUAGE}
@@ -496,18 +486,6 @@ module ReplTalk
 					unpublishRepl(input: $input) {
 						... on Repl {
 							#{Fields::REPL}
-						}
-					}
-				}
-			"
-
-			TOGGLE_REACTION = "
-				mutation ReplViewReactionsToggleReactions($input: SetReplReactionInput!) {
-					setReplReaction(input: $input) {
-						... on Repl {
-							reactions {
-								#{Fields::REACTIONS}
-							}
 						}
 					}
 				}

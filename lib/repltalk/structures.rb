@@ -85,24 +85,6 @@ module ReplTalk
 
 
 
-
-	class Reaction
-		attr_reader :id, :type, :count
-
-		def initialize(reaction)
-			@id = reaction["id"]
-			@type = reaction["type"]
-			@count = reaction["count"]
-		end
-
-		def to_s
-			@type
-		end
-	end
-
-
-
-
 	class ReplComment
 		attr_reader :id, :content, :author, :repl, :replies
 
@@ -157,7 +139,7 @@ module ReplTalk
 
 
 	class Repl
-		attr_reader :id, :url, :title, :author, :description, :timestamp, :size, :run_count, :fork_count, :language, :img_url, :origin_url, :is_private, :is_always_on, :tags, :reactions
+		attr_reader :id, :url, :title, :author, :description, :timestamp, :size, :run_count, :fork_count, :language, :img_url, :origin_url, :is_private, :is_always_on, :tags
 
 		def initialize(client, repl)
 			@client = client
@@ -179,7 +161,6 @@ module ReplTalk
 			@is_always_on = repl["isAlwaysOn"]
 
 			@tags = repl["tags"].map { |tag| Tag.new(@client, tag) }
-			@reactions = repl["reactions"].map { |reaction| Reaction.new(reaction) }
 		end
 
 		def get_forks(count: 100, after: nil)
