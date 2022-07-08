@@ -55,16 +55,12 @@ module ReplTalk
 
 
 	class Tag
-		attr_reader :id, :repl_count, :creator_count, :is_trending, :repls_tagged_today_count
+		attr_reader :id
 
 		def initialize(client, tag)
 			@client = client
 
 			@id = tag["id"]
-			@repl_count = tag["replCount"]
-			@is_trending = tag["isTrending"]
-			@creator_count = tag["creatorCount"]
-			@repls_tagged_today_count = tag["replsTaggedTodayCount"]
 		end
 
 		def get_repls(count: nil, after: nil)

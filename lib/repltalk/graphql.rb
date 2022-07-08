@@ -43,9 +43,6 @@ module ReplTalk
 
 			TAG = "
 				id
-				replCount
-				replsTaggedTodayCount
-				creatorCount
 			"
 
 			REPL = "
