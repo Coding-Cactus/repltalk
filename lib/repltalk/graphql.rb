@@ -30,7 +30,6 @@ module ReplTalk
 				username
 				image
 				bio
-				karma
 				isHacker
 				timeCreated
 				roles {

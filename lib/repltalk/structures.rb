@@ -487,7 +487,6 @@ module ReplTalk
 			@name = user["fullName"]
 			@pfp = user["image"]
 			@bio = user["bio"]
-			@cycles = user["karma"]
 			@is_hacker = user["isHacker"]
 			@timestamp = user["timeCreated"]
 			@roles = user["roles"].map { |role| Role.new(role) }

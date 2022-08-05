@@ -82,7 +82,6 @@ end
 + `#name` User's full name
 + `#pfp` URL of the user's pfp
 + `#bio` User's bio
-+ `#cycles` How many cycles the user has
 + `#timestamp` When the account was made
 + `#is_hacker` Whether the user has the hacker plan
 + `#roles` User's roles. Returns an array of `Role`s
